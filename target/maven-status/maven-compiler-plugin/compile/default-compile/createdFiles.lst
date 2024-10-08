@@ -15,8 +15,8 @@ oo2/redictado/antlr4/BythonParser$TupleLiteralContext.class
 oo2/redictado/antlr4/BythonParser$IdentifierListContext.class
 oo2/redictado/antlr4/BythonParser$CallableExpressionContext.class
 oo2/redictado/antlr4/BythonParser$ReturnStatementContext.class
-oo2/redictado/antlr4/BythonParser$AssignmentContext.class
 oo2/redictado/antlr4/BythonParser$SimpleAssignmentContext.class
+oo2/redictado/antlr4/BythonParser$AssignmentContext.class
 oo2/redictado/antlr4/BythonParser$MethodCallContext.class
 oo2/redictado/antlr4/BythonParser$MethodDeclContext.class
 oo2/redictado/antlr4/BythonParser$LambdaExpressionContext.class
@@ -33,8 +33,8 @@ oo2/redictado/antlr4/BythonParser$ExceptionListContext.class
 oo2/redictado/antlr4/BythonLexer.class
 oo2/redictado/antlr4/BythonParser$ProgramContext.class
 oo2/redictado/antlr4/BythonParser$ModuleNameContext.class
-oo2/redictado/antlr4/BythonParser$CollectionContext.class
 oo2/redictado/antlr4/BythonParserVisitor.class
+oo2/redictado/antlr4/BythonParser$CollectionContext.class
 oo2/redictado/antlr4/BythonParser$TryExceptStatementContext.class
 oo2/redictado/antlr4/BythonParser$AliasNameContext.class
 oo2/redictado/antlr4/BythonParser$ArgumentListContext.class
