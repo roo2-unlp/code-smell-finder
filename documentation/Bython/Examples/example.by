@@ -1,0 +1,74 @@
+class Animal {
+    def eat() {
+        print("I am eating");
+    }
+}
+
+class Person(Animal) {
+    def greet() {
+        print("Hello, " + this.name);
+    }
+
+    def birthday() {
+        this.age = this.age + 1;
+    }
+
+    def getAge() {
+        return this.age;
+    }
+}
+
+def hello() {
+    print("Hello, World!");
+}
+
+def sum_two_numbers(a, b) {
+    return a + b;
+}
+
+person = Person("Alice", 30);
+person.greet();
+person.birthday();
+
+number = 12.2;
+my_bool = True;
+my_bool = False;
+
+if (person.age > 30) {
+    print("You are older than 30!");
+}
+
+if (person.getAge() > 30) {
+    print("You are older than 30!");
+}
+
+while (person.getAge() < 35) {
+    person.birthday();
+}
+
+for _ in range(0, 100) {
+    person.greet();
+}
+
+"hi".length();
+
+True.__repr__().__repr__();
+
+sum = 12 + 24.5;
+
+try {
+    1;
+} except Exception | GreatException as e {
+    2;
+}
+
+lambda x, y: x + y;
+lambda a, b { return a + b; }
+
+if x in ['a', 'b', 'x'] {
+    return 2;
+}
+
+if x not in ['a', 'b', 'x'] {
+    return 3;
+}

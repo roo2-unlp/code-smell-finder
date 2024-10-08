@@ -1,0 +1,53 @@
+class Task {
+    def init(self, name, priority) {
+        self.name = name;
+        self.priority = priority;
+    }
+
+    def __repr__(self) {
+        return self.name + " (Priority: " + str(self.priority) + ")";
+    }
+}
+
+class PriorityQueue {
+    def init(self) {
+        self.queue = [];
+    }
+
+    def addTask(self, task) {
+        self.queue.append(task);
+        self.queue = sorted(self.queue, key=lambda t: t.priority, reverse=True);
+    }
+
+    def popTask(self) {
+        if len(self.queue) > 0 {
+            task = self.queue.pop(0);
+            print("Processing task:", task);
+            return task;
+        } else {
+            print("No tasks in the queue.");
+            return None;
+        }
+    }
+
+    def peekTask(self) {
+        if len(self.queue) > 0 {
+            return self.queue[0];
+        } else {
+            print("No tasks in the queue.");
+            return None;
+        }
+    }
+}
+
+taskQueue = PriorityQueue();
+taskQueue.addTask(Task("Write report", 2));
+taskQueue.addTask(Task("Fix bug", 1));
+taskQueue.addTask(Task("Send email", 3));
+
+print("Next task:", taskQueue.peekTask());
+
+taskQueue.popTask();
+taskQueue.popTask();
+taskQueue.popTask();
+taskQueue.popTask();

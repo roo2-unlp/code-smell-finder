@@ -1,0 +1,14 @@
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/antlr4/BythonParserBaseVisitor.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/antlr4/BythonParserBaseListener.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/AnosmicCodeSniffer/AnosmicVisitor.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/Aroma.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/SerialSniffer.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/antlr4/BythonLexer.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/CodeSniffer.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/antlr4/BythonParser.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/PrintSniffer/PrintSniffer.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/PrintSniffer/PrintSnifferVisitor.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/AnosmicCodeSniffer/AnosmicCodeSniffer.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/antlr4/BythonParserVisitor.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/antlr4/BythonParserListener.java
+/home/leo-loza/git/antlr4-maven-ejemplo/src/main/java/oo2/redictado/AromaReport.java

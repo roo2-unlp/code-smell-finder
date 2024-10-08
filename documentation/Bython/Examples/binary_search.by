@@ -1,0 +1,25 @@
+def binary_search(arr, target) {
+    low = 0;
+    high = len(arr) - 1;
+
+    while (low <= high) {
+        mid = (low + high);
+        if arr[mid] == target {
+            return mid;
+        } elif arr[mid] < target {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return -1;
+}
+
+arr = [2, 3, 4, 10, 40];
+target = 10;
+result = binary_search(arr, target);
+if result != -1 {
+    print("Elemento encontrado en el índice" + result);
+} else {
+    print("Elemento no encontrado");
+}

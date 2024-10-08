@@ -1,0 +1,29 @@
+class BankAccount {
+    def init(self, owner, balance) {
+        self.owner = owner;
+        self.balance = balance;
+    }
+
+    def deposit(self, amount) {
+        self.balance = self.balance + amount;
+        print("Deposited", amount, "to", self.owner, "'s account.");
+    }
+
+    def withdraw(self, amount) {
+        if amount <= self.balance {
+            self.balance = self.balance - amount;
+            print("Withdrew", amount, "from", self.owner, "'s account.");
+        } else {
+            print("Insufficient balance in", self.owner, "'s account.");
+        }
+    }
+
+    def checkBalance(self) {
+        print(self.owner, "'s balance:", self.balance);
+    }
+}
+
+account = BankAccount("John", 500);
+account.deposit(200);
+account.withdraw(100);
+account.checkBalance();
