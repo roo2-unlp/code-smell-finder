@@ -8,7 +8,10 @@ Asegurate de tener instalados y configurados los **paths** de:
 
 - **Java 21**
 
-- **Maven**
+- **Maven 3.9.9**
+
+> [!NOTE]
+> En el repositorio está incluido el wrapper de Maven, que descargará la versión 3.9.9 si no la tenés instalada. Si preferís optar por esta opción, podés no instalar Maven por tu cuenta y reemplazar `mvn` por `./mvnw` o `./mvnw.cmd` (según tu OS) en los comandos que se detallan a continuación.
 
 ## :building_construction: Estructura del proyecto
 
