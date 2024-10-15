@@ -41,6 +41,7 @@ CallableLiteral
     : STRING_LITERAL
     | TRUE
     | FALSE
+    | NONE
     ;
 
 NUMBER_LITERAL
@@ -62,6 +63,7 @@ IS: 'is';
 UNION: '|';
 TRUE: 'True';
 FALSE: 'False';
+NONE: 'None';
 BREAK: 'break';
 CONTINUE: 'continue';
 PASS: 'pass';

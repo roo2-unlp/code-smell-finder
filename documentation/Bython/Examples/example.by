@@ -33,6 +33,7 @@ person.birthday();
 number = 12.2;
 my_bool = True;
 my_bool = False;
+my_null = None;
 
 if (person.age > 30) {
     print("You are older than 30!");
