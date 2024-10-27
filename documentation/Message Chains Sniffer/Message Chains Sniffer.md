@@ -186,7 +186,7 @@ address = Address(city);
 person = Person("Leo", address);
 
 
-city_name = person.get_address().get_street()
+city_name = person.get_address().get_street();
 ```
 
 ---
