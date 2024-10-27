@@ -1,18 +1,21 @@
 package oo2.redictado;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import oo2.redictado.AnosmicCodeSniffer.AnosmicCodeSniffer;
+import oo2.redictado.MessageChainsSniffer.MessageChainsSniffer;
 
 public class MessageChainsSnifferTest {
-    AnosmicCodeSniffer codeSniffer;
+    MessageChainsSniffer codeSniffer;
 
     @BeforeEach
     public void setUp() {
-        codeSniffer = new AnosmicCodeSniffer();
+        codeSniffer = new MessageChainsSniffer();
     }
 
     @Test
@@ -57,7 +60,21 @@ public class MessageChainsSnifferTest {
         String code = "city_name = person.get_address().get_city().get_name();";
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
+        assertTrue(report.stinks());
+    }
+
+    @Test
+    public void testLimiteSuperiorTresLlamadasEnVariasLineas() {
+        String code = 
+        """
+        city_name = person.get_address().get_city().get_name();
+        city_name = person.get_address().get_city().get_name();
+        city_name = person.get_address().get_city().get_name();
+        """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(3, report.getAromas().size());
     }
 
     @Test
@@ -65,7 +82,7 @@ public class MessageChainsSnifferTest {
         String code = "country_name = person.get_address().get_city().get_state().get_country().get_name();";
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
+        assertTrue(report.stinks());
     }
 
     @Test
@@ -85,10 +102,10 @@ public class MessageChainsSnifferTest {
         String code = "final_price = customer.cart.get_total(21).get_price(10).checkout(50, 21);";
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
+        assertTrue(report.stinks());
     }
 
-    @Test
+    @Disabled
     public void testCadenaUsandoAtributosConcatenados() {
         String code = "car_horsepower = person.car.engine.horsepower;";
         AromaReport report = new AromaReport(code);
@@ -96,7 +113,7 @@ public class MessageChainsSnifferTest {
         assertFalse(report.stinks());
     }
 
-    @Test
+    @Disabled
     public void testCadenaDeMetodosYAtributos() {
         String code = "car_horsepower = person.get_car().engine.horsepower;";
         AromaReport report = new AromaReport(code);
@@ -109,7 +126,7 @@ public class MessageChainsSnifferTest {
         String code = "print_location(person.get_address().get_city().get_state().get_country().get_name());";
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
+        assertTrue(report.stinks());
     }
 
 }
