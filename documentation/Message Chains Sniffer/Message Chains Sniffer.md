@@ -23,7 +23,7 @@
 
 ## 🤝🏼 Integrantes
 
-Fabian Martinez Rincon | Lucia Lamella |
+Fabian Martinez Rincon | Julia Saenz |
 --- | --- |
 ![@Fabian-Martinez-Rincon](https://avatars.githubusercontent.com/Fabian-Martinez-Rincon?s=150&v=1) | ![@juliasaenz](https://avatars.githubusercontent.com/juliasaenz?s=150&v=1) |
 [@Fabian-Martinez-Rincon](https://github.com/juliasaenz) | [@juliasaenz](https://github.com/juliasaenz) | 
