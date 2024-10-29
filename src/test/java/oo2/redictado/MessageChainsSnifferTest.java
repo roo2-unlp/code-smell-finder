@@ -131,7 +131,11 @@ public class MessageChainsSnifferTest {
 
 	@Test
 	public void testCadenaComoRetornoFuncion() {
-		String code = "return cust.get_store().get_phone().get_model();";
+		String code = """
+				def get_customer_phone_model(cust){
+					return cust.get_store().get_phone().get_model();
+				}
+				""";
 		AromaReport report = new AromaReport(code);
 		codeSniffer.sniff(code, report);
 		assertTrue(report.stinks());
