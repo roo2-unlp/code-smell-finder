@@ -6,9 +6,9 @@ import oo2.redictado.antlr4.BythonParser;
 import oo2.redictado.antlr4.BythonParserBaseVisitor;
 
 public class MessageChainsSnifferVisitor extends BythonParserBaseVisitor<Void> {
-    private AromaReport report;
-    private String callerName;
-    private int chainThreshold;
+    private final AromaReport report;
+    private final String callerName;
+    private final int chainThreshold;
 
     public MessageChainsSnifferVisitor(AromaReport report, String callerName) {
         super();
@@ -18,19 +18,20 @@ public class MessageChainsSnifferVisitor extends BythonParserBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitMethodCall(BythonParser.MethodCallContext ctx) {
-        int depth = 1;
-        BythonParser.MethodCallContext current = ctx;
-        
-        while (current.parent instanceof BythonParser.MethodCallContext) {
-            depth++;
-            current = (BythonParser.MethodCallContext) current.parent;
+    public Void visitChainedExpression(BythonParser.ChainedExpressionContext ctx) {
+        int profundidad = calcularProfundidadDeCadena(ctx);
+        if (profundidad >= chainThreshold) {
+            crearAroma(profundidad);
         }
-
-        if (depth >= chainThreshold) {
-            report.addAroma(new Aroma(this.callerName, "Detectó una cadena de mensajes de longitud " + depth, true));
-        }
-
         return visitChildren(ctx);
+    }
+
+    private int calcularProfundidadDeCadena(BythonParser.ChainedExpressionContext ctx) {
+        return ctx.chainedMethodCall().size() + ctx.propertyAccess().size();
+    }
+
+    private void crearAroma(int profundidad) {
+        String descripcion = "Detectada una expresión encadenada de longitud " + profundidad;
+        report.addAroma(new Aroma(callerName, descripcion, true));
     }
 }
