@@ -62,7 +62,7 @@ simpleAssignment
 implicitAssignment
     : (ID | objectProperty) (PLUS_ASSIGN | MINUS_ASSIGN | STAR_ASSIGN | SLASH_ASSIGN) expression
     ;
-    
+
 
 compoundAssignment: objectProperty ASSIGN expression;
 
@@ -71,7 +71,7 @@ indexAssignment
     ;
 
 methodCall
-    : (callableExpression DOT)? ID LPAR argumentList? RPAR (DOT methodCall)?
+    : ID LPAR argumentList? RPAR
     ;
 
 ifStatement
@@ -133,13 +133,14 @@ valueExpression
     | valueExpression AND valueExpression
     | valueExpression OR valueExpression
     | LPAR valueExpression RPAR
+    | chainedExpression
     | NUMBER_LITERAL
     | callableExpression
     | methodCall
     | lambdaExpression
     | indexAccess
     ;
-    
+
 indexAccess
     : callableExpression LBRACK expression RBRACK
     ;
@@ -178,10 +179,30 @@ setLiteral
     : LBRACE (expression (COMMA expression)*) RBRACE
     ;
 
+propertyAccess
+    : DOT ID
+    ;
+
 objectProperty
-    : (ID | SELF) DOT ID
+    : (ID | SELF) (propertyAccess)+
     ;
 
 argumentList
     : expression (COMMA expression)*
+    ;
+
+chainStart
+    : ID
+    | CallableLiteral
+    | SELF
+    | collection
+    | methodCall
+    ;
+
+chainedMethodCall
+    : DOT methodCall
+    ;
+
+chainedExpression
+    : chainStart (chainedMethodCall | propertyAccess)+
     ;
