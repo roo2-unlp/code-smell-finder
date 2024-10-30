@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import oo2.redictado.MessageChainsSniffer.MessageChainsSniffer;
@@ -105,20 +103,20 @@ public class MessageChainsSnifferTest {
 		assertTrue(report.stinks());
 	}
 
-	@Disabled
+	@Test
 	public void testCadenaUsandoAtributosConcatenados() {
 		String code = "car_horsepower = person.car.engine.horsepower;";
 		AromaReport report = new AromaReport(code);
 		codeSniffer.sniff(code, report);
-		assertFalse(report.stinks());
+		assertTrue(report.stinks());
 	}
 
-	@Disabled
+	@Test
 	public void testCadenaDeMetodosYAtributos() {
 		String code = "car_horsepower = person.get_car().engine.horsepower;";
 		AromaReport report = new AromaReport(code);
 		codeSniffer.sniff(code, report);
-		assertFalse(report.stinks());
+		assertTrue(report.stinks());
 	}
 
 	@Test
