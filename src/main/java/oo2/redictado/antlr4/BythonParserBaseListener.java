@@ -95,6 +95,19 @@ public class BythonParserBaseListener implements BythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPropertyAccess(@NotNull BythonParser.PropertyAccessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyAccess(@NotNull BythonParser.PropertyAccessContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterProgram(@NotNull BythonParser.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -134,6 +147,19 @@ public class BythonParserBaseListener implements BythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterChainedExpression(@NotNull BythonParser.ChainedExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChainedExpression(@NotNull BythonParser.ChainedExpressionContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTryExceptStatement(@NotNull BythonParser.TryExceptStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -154,6 +180,19 @@ public class BythonParserBaseListener implements BythonParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitArgumentList(@NotNull BythonParser.ArgumentListContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChainStart(@NotNull BythonParser.ChainStartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChainStart(@NotNull BythonParser.ChainStartContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -310,6 +349,19 @@ public class BythonParserBaseListener implements BythonParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAssignment(@NotNull BythonParser.AssignmentContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChainedMethodCall(@NotNull BythonParser.ChainedMethodCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChainedMethodCall(@NotNull BythonParser.ChainedMethodCallContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

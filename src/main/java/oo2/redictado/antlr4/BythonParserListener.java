@@ -75,6 +75,17 @@ public interface BythonParserListener extends ParseTreeListener {
 	void exitListLiteral(@NotNull BythonParser.ListLiteralContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link BythonParser#propertyAccess}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyAccess(@NotNull BythonParser.PropertyAccessContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BythonParser#propertyAccess}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyAccess(@NotNull BythonParser.PropertyAccessContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link BythonParser#program}.
 	 * @param ctx the parse tree
 	 */
@@ -108,6 +119,17 @@ public interface BythonParserListener extends ParseTreeListener {
 	void exitReturnStatement(@NotNull BythonParser.ReturnStatementContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link BythonParser#chainedExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterChainedExpression(@NotNull BythonParser.ChainedExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BythonParser#chainedExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitChainedExpression(@NotNull BythonParser.ChainedExpressionContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link BythonParser#tryExceptStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -128,6 +150,17 @@ public interface BythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitArgumentList(@NotNull BythonParser.ArgumentListContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BythonParser#chainStart}.
+	 * @param ctx the parse tree
+	 */
+	void enterChainStart(@NotNull BythonParser.ChainStartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BythonParser#chainStart}.
+	 * @param ctx the parse tree
+	 */
+	void exitChainStart(@NotNull BythonParser.ChainStartContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BythonParser#dictLiteral}.
@@ -260,6 +293,17 @@ public interface BythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssignment(@NotNull BythonParser.AssignmentContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BythonParser#chainedMethodCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterChainedMethodCall(@NotNull BythonParser.ChainedMethodCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BythonParser#chainedMethodCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitChainedMethodCall(@NotNull BythonParser.ChainedMethodCallContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BythonParser#exceptionList}.
