@@ -1,7 +1,5 @@
 # 🚨 Duplicated Code
 
----
-
 ## 📜 Definición
 
 El código duplicado es un "mal olor" en la programación, ya que dificulta la comprensión y el mantenimiento del software. Duplicar código significa que cualquier cambio deberá realizarse en múltiples lugares, lo que aumenta el riesgo de errores y genera inconsistencias. Además, leer múltiples copias de código similar complica el análisis del programa y puede inducir a errores.
@@ -247,5 +245,3 @@ SELECT columna1, columna2
 
 - **Lautaro José Gubia**  
 - **Sofía Coria Martínez**
-
----
