@@ -54,6 +54,13 @@ public interface BythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitListLiteral(@NotNull BythonParser.ListLiteralContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link BythonParser#propertyAccess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyAccess(@NotNull BythonParser.PropertyAccessContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link BythonParser#program}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -75,6 +82,13 @@ public interface BythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitReturnStatement(@NotNull BythonParser.ReturnStatementContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link BythonParser#chainedExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitChainedExpression(@NotNull BythonParser.ChainedExpressionContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link BythonParser#tryExceptStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -87,6 +101,13 @@ public interface BythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitArgumentList(@NotNull BythonParser.ArgumentListContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BythonParser#chainStart}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitChainStart(@NotNull BythonParser.ChainStartContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BythonParser#dictLiteral}.
@@ -171,6 +192,13 @@ public interface BythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAssignment(@NotNull BythonParser.AssignmentContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BythonParser#chainedMethodCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitChainedMethodCall(@NotNull BythonParser.ChainedMethodCallContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BythonParser#exceptionList}.

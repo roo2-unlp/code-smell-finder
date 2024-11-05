@@ -11,7 +11,7 @@ import oo2.redictado.CodeSniffer;
 import oo2.redictado.antlr4.BythonLexer;
 import oo2.redictado.antlr4.BythonParser;
 
-public class FeatureEnvySniffer {
+public class FeatureEnvySniffer implements CodeSniffer {
     public void sniff(String code, AromaReport report) {
         // Creates Bython Parser
         CharStream stream = CharStreams.fromString(code);
@@ -34,5 +34,4 @@ public class FeatureEnvySniffer {
             report.addAroma(new Aroma("FeatureEnvySniffer", "The code smells good", false));
         }
     }
-    
 }

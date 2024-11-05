@@ -43,16 +43,17 @@ Usamos un límite para restringir, dentro de un rango razonable, el número de a
 No hay *feature envy* porque se accede a comportamiento propio.
 
 ```python
-class Persona:
-    def __init__(self, nombre, apellido):
-        self.nombre = nombre
-        self.apellido = apellido
-
-    def nombre_igual(self, nombre):
-        return self.nombre == nombre
-
-persona = Persona("John", "Lennon")
-print(persona.nombre_igual("Juan"))
+class Persona{
+    def __init__(self, nombre, apellido){
+        self.nombre = nombre;
+        self.apellido = apellido;
+    }
+    def nombre_igual(self, nombre){
+        return self.nombre == nombre;
+    }
+}
+persona = Persona("John", "Lennon");
+print(persona.nombre_igual("Juan"));
 ```
 
 ### Ejemplo 2
@@ -151,7 +152,7 @@ class VTV{
 	}
 	
 	def calcularPrecio(){
-		return self.auto.precioTotal(VTV);
+		return self.auto.precioTotal(self);
 	}
 }
 ```
