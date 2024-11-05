@@ -113,7 +113,7 @@ public class FeatureEnvySnifferTest {
                         """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
+        assertTrue(report.stinks());
     }
     
     @Test void testParameterDependence(){
@@ -129,7 +129,7 @@ public class FeatureEnvySnifferTest {
                         """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
+        assertTrue(report.stinks());
     }
 
     @Test void testNotParameterDependence(){
@@ -157,7 +157,7 @@ public class FeatureEnvySnifferTest {
                             }
                             
                             def calcularPrecio(){
-                                return self.auto.precioTotal(self);
+                                return self.auto.precioTotal(VTV);
                             }
                         } 
                         """;
