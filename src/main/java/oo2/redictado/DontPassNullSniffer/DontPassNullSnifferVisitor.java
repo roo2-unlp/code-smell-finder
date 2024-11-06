@@ -1,5 +1,6 @@
 package oo2.redictado.DontPassNullSniffer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import oo2.redictado.Aroma;
@@ -17,18 +18,23 @@ public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
         super();
         this.report = report;
         this.callerName = callerName;
+        this.variablesWithNone= new ArrayList<>();
     }
     @Override
     public Void visitArgumentList (BythonParser.ArgumentListContext ctx) {
     	//Obtengo la lista de argumentos enviados a la funcion y la convierto en un string
     	List<ExpressionContext> argumentVariable= ctx.expression();
-    	argumentVariable.forEach((c)->{if (c.valueExpression().callableExpression().getChild(0).getText().equals("None")| this.variablesWithNone.contains(c.valueExpression().callableExpression().getText())){
-    		report.addAroma(new Aroma(this.callerName, "The code Pass Null", true));
-    		}});
+    	if (this.variablesWithNone.isEmpty()) {
+    	argumentVariable.forEach((c)->{if (c.getText().equals("None")) {report.addAroma(new Aroma(this.callerName, "The code pass None.", true));}});
+    	}else {
+    	argumentVariable.forEach((c)->{if (c.getText().equals("None")|this.variablesWithNone.contains(c.getText())) {report.addAroma(new Aroma(this.callerName, "The code pass None.", true));}});	
+    	}
+    	
     	return visitChildren(ctx);
     }
+    //| this.variablesWithNone.contains(c.getText())
     @Override 
-    
+    //c.valueExpression().callableExpression().getChild(0).getText().equals("None")| this.variablesWithNone.contains(c.valueExpression().callableExpression().getText())
     public Void visitAssignment(BythonParser.AssignmentContext ctx) {
         // Check if the assignment is to None
     	// Preguntar si hay que chequear por cada tipo de assignment

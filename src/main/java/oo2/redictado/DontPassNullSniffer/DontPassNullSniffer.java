@@ -26,11 +26,11 @@ public class DontPassNullSniffer {
         }
 
         // Visits the parse tree to check for bad smells
-        DontPassNullSnifferVisitor visitor = new DontPassNullSnifferVisitor(report, "PrintSniffer");
+        DontPassNullSnifferVisitor visitor = new DontPassNullSnifferVisitor(report, "DontPassNullSniffer");
         visitor.visit(tree);
 
         if (!report.stinks()) {
-            report.addAroma(new Aroma("PrintSniffer", "The code smells good", false));
+            report.addAroma(new Aroma("DontPassNullSniffer", "The code smells good", false));
         }
     }
 }
