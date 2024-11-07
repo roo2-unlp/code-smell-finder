@@ -3,7 +3,6 @@ package oo2.redictado;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import oo2.redictado.AlternativeClassesSniffer.AlternativeClassesSniffer;
@@ -16,173 +15,201 @@ public class AlternativeClassesTest {
         codeSniffer = new AlternativeClassesSniffer();
     }
 
+    // true = detecta mal olor. Cumple con el mal olor. Diferente interfaz 
+    // false = no cumple. Es deci, misma interfaz 
+
+    // Caso 1: Métodos con el mismo nombre, parámetros y contenido igual (no hay mal olor)
     @Test
-    public void testClasesSinMetodosSimilares() {
+    public void testMetodosIgualesConParametrosYContenidoIgual() {
         String code = """
                 class Perro {
-                    def ladrar() {}
+                    def ladrar() {
+                        print("Ladrando");
+                    }
                 }
                 class Gato {
-                    def maullar() {}
+                    def ladrar() {
+                        print("Ladrando");
+                    }
                 }
                 """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
+
+        assertFalse(report.stinks()); // No debe detectar mal olor
     }
 
+    // Caso 2: Métodos con el mismo nombre, parámetros iguales, pero el contenido es diferente (mal olor)
     @Test
-    public void testDosClasesConMetodosSimilares() {
+    public void testMetodosIgualesConParametrosIgualesPeroContenidoDiferente() {
+        String code = """
+                class Perro {
+                    def ladrar() {
+                        print("Ladrando fuerte");
+                    }
+                }
+                class Gato {
+                    def ladrar() {
+                        print("Ladrando suave");
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks()); // Debe detectar mal olor
+    }
+
+    // Caso 3: Métodos con el mismo nombre, parámetros diferentes, pero el contenido es igual (mal olor)
+    @Test
+    public void testMetodosIgualesConParametrosDiferentesYContenidoIgual() {
+        String code = """
+                class Perro {
+                    def ladrar(volume) {
+                        print("Ladrando");
+                    }
+                }
+                class Gato {
+                    def ladrar(int volumen) {
+                        print("Ladrando");
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks()); // Debe detectar mal olor
+    }
+
+    // Caso 4: Métodos con el mismo nombre y parámetros diferentes, contenido diferente (no hay mal olor)
+    @Test
+    public void testMetodosIgualesConParametrosYContenidoDiferentes() {
+        String code = """
+                class Perro {
+                    def ladrar(volume) {
+                        print("Ladrando fuerte");
+                    }
+                }
+                class Gato {
+                    def ladrar(int volumen) {
+                        print("Ladrando suave");
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks()); // No debe detectar mal olor
+    }
+
+    // Caso 5: Métodos con nombres diferentes, pero parámetros y contenido iguales (mal olor)
+    @Test
+    public void testMetodosConNombresDiferentesPeroParametrosYContenidoIguales() {
+        String code = """
+                class Perro {
+                    def ladrar() {
+                        print("Ladrando");
+                    }
+                }
+                class Gato {
+                    def maullar() {
+                        print("Ladrando");
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks()); // Debe detectar mal olor
+    }
+
+    // Caso 6: Métodos con nombres diferentes, parámetros iguales, contenido diferente (no hay mal olor)
+    @Test
+    public void testMetodosConNombresDiferentesParametrosIgualesYContenidoDiferente() {
+        String code = """
+                class Perro {
+                    def ladrar(volume) {
+                        print("Ladrando fuerte");
+                    }
+                }
+                class Gato {
+                    def maullar(volume) {
+                        print("Ladrando suave");
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks()); // No debe detectar mal olor
+    }
+
+    // Caso 7: Métodos con nombres diferentes, parámetros diferentes, pero contenido igual (mal olor)
+    @Test
+    public void testMetodosConNombresDiferentesParametrosDiferentesYContenidoIgual() {
+        String code = """
+                class Perro {
+                    def ladrar(volume) {
+                        print("Ladrando");
+                    }
+                }
+                class Gato {
+                    def maullar(int volumen) {
+                        print("Ladrando");
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks()); // Debe detectar mal olor
+    }
+
+    // Caso 8: Métodos con nombres diferentes, parámetros diferentes, contenido diferente (no hay mal olor)
+    @Test
+    public void testMetodosConNombresDiferentesParametrosDiferentesYContenidoDiferente() {
+        String code = """
+                class Perro {
+                    def ladrar(volume) {
+                        print("Ladrando fuerte");
+                    }
+                }
+                class Gato {
+                    def maullar(volume) {
+                        print("Maullando suave");
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks()); // No debe detectar mal olor
+    }
+
+    // Caso 9: La clase tiene más de un método, pero solo uno de ellos es similar (mal olor)
+    @Test
+    public void testVariasMetodosConUnoSimilar() {
         String code = """
                 class Carro {
-                    def arrancar() {}
-                    def frenar() {}
+                    def arrancar() {
+                        print("Arrancando");
+                    }
+                    def frenar() {
+                        print("Frenando");
+                    }
                 }
                 class Bicicleta {
-                    def arrancar() {}
-                    def frenar() {}
+                    def arrancar() {
+                        print("Arrancando");
+                    }
+                    def detener() {
+                        print("Deteniendo");
+                    }
                 }
                 """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-    }
 
-    @Test
-    public void testClasesConUnMetodoSimilar() {
-        String code = """
-                class Computadora {
-                    def iniciar() {}
-                }
-                class Tablet {
-                    def iniciar() {}
-                    def suspender() {}
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-    }
-
-    @Test
-    public void testClasesConMetodosRelacionados() {
-        String code = """
-                class Piloto {
-                    def despegar() {}
-                    def aterrizar() {}
-                }
-                class Avion {
-                    def despegar() {}
-                    def aterrizar() {}
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-    }
-
-    @Test
-    public void testTresClasesSimilares() {
-        String code = """
-                class Leon {
-                    def comer() {}
-                    def dormir() {}
-                }
-                class Tigre {
-                    def comer() {}
-                    def dormir() {}
-                }
-                class Oso {
-                    def comer() {}
-                    def dormir() {}
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-    }
-
-    @Test
-    public void testClasesSimilaresConInterfacesDiferentes() {
-        String code = """
-                class Television {
-                    def encender() {}
-                    def apagar() {}
-                }
-                class Radio {
-                    def activar() {}
-                    def desactivar() {}
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
-    }
-
-    @Test
-    public void testClasesSimilaresConParametrosDiferentes() {
-        String code = """
-                class Camion {
-                    def cargar(peso) {}
-                    def descargar() {}
-                }
-                class Barco {
-                    def cargar(cantidad) {}
-                    def descargar() {}
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-    }
-
-    @Test
-    public void testDosClasesConParametrosDistintos() {
-        String code = """
-                class Restaurante {
-                    def preparar(plato) {}
-                }
-                class ComidaRapida {
-                    def preparar(menu) {}
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-    }
-
-    @Disabled
-    public void testMetodosIgualesConParametrosOpcionales() {
-        String code = """
-                class Servidor {
-                    def iniciar(configuracion="predeterminada") {}
-                    def detener() {}
-                }
-                class Cliente {
-                    def iniciar(configuracion="predeterminada") {}
-                    def detener() {}
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-    }
-
-    @Test
-    public void testVariasClasesConMetodosSimilares() {
-        String code = """
-                class Helado {
-                    def derretir() {}
-                }
-                class Yogurt {
-                    def derretir() {}
-                }
-                class Nieve {
-                    def derretir() {}
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
+        assertTrue(report.stinks()); // Debe detectar mal olor solo por el método similar 'arrancar'
     }
 }
