@@ -76,8 +76,8 @@ public class DontReturnNullSnifferTest {
         assertTrue(report.stinks());
         assertEquals(1, report.getAromas().size());
     }
-    
-    
+
+
     @Test
     public void testReturnVarWithNoNull() {
     	// test de una var = none y luego se le asigna un valor valido
@@ -91,6 +91,34 @@ public class DontReturnNullSnifferTest {
 
         assertFalse(report.stinks());
     }
-    
+
+    @Test
+    public void testReturnImplicitExpression() {
+        // test de una var = none y luego se le asigna un valor valido
+        String code = "def ejemplo5 (){\r\n"
+                + "a = None;\r\n"
+                + "return a + 10;\r\n"
+                + "}";
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks());
+    }
+    //Test de una variable asignada con valor None que se devuelve en una expresion matematica
+
+
+    @Test
+    public void testReturnCompoundExpression() {
+        // test de una var = none y luego se le asigna un valor valido
+        String code = "def ejemplo5 (){\r\n"
+                + "return object.getFirstElement();\r\n"
+                + "}";
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks());
+    }
+    // test de una var con valor desconocido. No deberia dar smell
+
 }
         

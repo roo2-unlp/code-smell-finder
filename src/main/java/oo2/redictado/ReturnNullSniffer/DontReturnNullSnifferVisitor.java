@@ -23,6 +23,8 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
     @Override
     public Void visitReturnStatement(BythonParser.ReturnStatementContext ctx) {
     	// obtengo la variable o la expresion que se devuelve, puede ser 'None' directamente o una variable 'a'
+        // NONE se define como un CallableLiteral, que es un CallableExpresion y un return statement puede ser o valueExpression que puede ser un CallableExpression.
+
     	String returnVariable = ctx.expression().getText();
     	
     	// si la expresion es 'None' o la variable esta en la lista de vars = None entonces hay mal olor
@@ -31,12 +33,16 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
         }
         return visitChildren(ctx);
     }
-    
+
+    //PARA EL VISIT RETURN STATEMENT REVISAR LOS VALUEEXPRESSION
+    //PARA EL VISIT ASSIGNMENT REVISAR LOS ASSIGNMENT
+
     @Override
     public Void visitAssignment(BythonParser.AssignmentContext ctx) {
         // Check if the assignment is to None
     	// Preguntar si hay que chequear por cada tipo de assignment
-    	
+    	// Verificar por cada tipo de assignment si es None
+
     	if (ctx.simpleAssignment() != null) { // Verifica que sea un simpleAssignment
             String variableName = ctx.simpleAssignment().ID().getText(); // Obtengo el nombre de la variable
             String assignedValue = ctx.simpleAssignment().expression().getText(); // Obtengo la expresión asignada
