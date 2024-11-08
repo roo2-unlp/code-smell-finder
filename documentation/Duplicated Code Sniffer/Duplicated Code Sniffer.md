@@ -9,8 +9,10 @@ El código duplicado es un "mal olor" en la programación, ya que dificulta la c
 ### 🧑‍💻 Pautas del Sniffer
 
 + **Relaciones de herencia y clases derivadas**: no serán analizadas, ya que pueden estar definidas en archivos separados que el sniffer no recibe.
-+ **Atributos en constructores** (`__init__`): serán considerados duplicados si se encuentran al menos tres atributos con el mismo nombre y valor asignado, sin importar el orden ni la cantidad de líneas del constructor.
-+ **Código Bython**: El sniffer solo analizará sintaxis escrita en Bython; otros lenguajes serán ignorados.
++ **Atributos en constructores** (`__init__`): serán considerados duplicados si se encuentran al menos tres atributos con el mismo nombre y valor asignado, sin importar la secuencia de líneas.
++ **Secuencia de líneas y texto idénticos**: se considera código repetido cuando existe una secuencia de líneas con texto idéntico entre métodos o scripts.
++ **Código Bython**: el sniffer solo analizará sintaxis escrita en Bython; otros lenguajes serán ignorados.
++ **Detección**: el sniffer identificará todos los errores y los alertará al finalizar el análisis completo del archivo. Si el archivo no corresponde a Bython, detendrá su ejecución en la primera línea donde detecte un error de sintaxis.
 
 ---
 
@@ -106,7 +108,7 @@ class Coche() {
 }
 
 class Moto() {
-    def __init__(self, modelo, color) {
+    def __init__(self, marca, modelo, color) {
         self.marca = "Yamaha";
         self.modelo = "Scooter";
         self.color = "Rojo";
@@ -116,17 +118,17 @@ class Moto() {
 
 ---
 
-### Métodos con la misma estructura
+### Métodos con secuencia de líneas y texto idénticos
 
-**Justificación**: En este caso, dos métodos (`suma` y `add`) realizan la misma operación de suma con una estructura idéntica, lo cual debería ser identificado como código duplicado por el sniffer.
+**Justificación**: En este caso, dos métodos (`suma` y `add`) realizan la misma operación de suma con una secuencia de líneas idéntica. Esto debería ser detectado por el sniffer como código duplicado.
 
 ```bython
 def suma(a, y) {
     return a + y;
 }
 
-def add(elem1, elem2) {
-    return elem1 + elem2;
+def add(a, y) {
+    return a + y;
 }
 ```
 
@@ -134,23 +136,23 @@ def add(elem1, elem2) {
 
 ### Estructura perteneciente a un método repetida en otro
 
-**Justificación**: En este ejemplo, el `metodoA` repite una secuencia de operaciones que ya está definida en `metodoB` de la misma clase. Este patrón debería ser reconocido como duplicación.
+**Justificación**: En este ejemplo, el `metodoA` repite una secuencia de operaciones que son idénticas y están definidas en `metodoB` de la misma clase. Este patrón debería ser reconocido como duplicación.
 
 ```bython
 class Ejemplo() {
 
-   def metodoA() { 
-      valor1 = 20.5;
-      print("Inicio"); 
-      resultado = 5 * 4;
-      print("Fin"); 
-   }
+    def metodoA() { 
+        valor1 = 20.5;
+        print("Inicio"); 
+        resultado = 5 * 4;
+        print("Fin"); 
+    }
    
-   def metodoB() {
-      print("Inicio"); 
-      resultado = 5 * 4;
-      print("Fin");
-   }
+    def metodoB() {
+        print("Inicio"); 
+        resultado = 5 * 4;
+        print("Fin");
+    }
    
 }
 ```
@@ -181,7 +183,7 @@ print("resta")
 
 ### Métodos con diferente estructura
 
-**Justificación**: Los métodos `suma` y `resta` tienen estructuras diferentes, por lo que el sniffer no debería identificarlos como duplicados.
+**Justificación**: Los métodos `suma` y `resta` tienen operaciones diferentes en sus líneas, por lo que el sniffer no debería identificarlos como duplicados.
 
 ```bython
 def suma(x, y) {
@@ -197,16 +199,16 @@ def resta(x, y) {
 
 ### Repetición de secuencias de operaciones en script
 
-**Justificación**: Este script muestra una repetición de la misma secuencia de operaciones, que incluye una suma, la adición del resultado a una lista y la impresión del resultado, lo cual representa un patrón duplicado. Esto debería ser identificado como duplicación por el sniffer.
+**Justificación**: Este script muestra una repetición de la misma secuencia de líneas y texto, que incluye una suma, la adición del resultado a una lista y la impresión del resultado, lo cual representa un patrón duplicado. Esto debería ser identificado como duplicación por el sniffer.
 
 ```bython
 x = elem1 + elem2;
 lista.add(x);
 print(x);
 print(lista);
-y = elem2 + elem3;
-lista.add(y);
-print(y);
+x = elem1 + elem2;
+lista.add(x);
+print(x);
 print(lista);
 ```
 
@@ -214,7 +216,7 @@ print(lista);
 
 ### No hay repetición de secuencias de operaciones en script
 
-**Justificación**: En este script, cada bloque realiza acciones diferentes, sin secuencias repetidas, lo cual indica una estructura única que no debería ser detectada como duplicada.
+**Justificación**: En este script, cada bloque realiza una secuencia de líneas diferente, sin secuencias repetidas, lo cual indica una estructura única que no debería ser detectada como duplicada.
 
 ```bython
 x = elem1 + elem2;
@@ -222,9 +224,9 @@ lista.add(x);
 print("algo");
 print(x);
 print(lista);
-y = elem2 + elem3;
-lista.add(y);
-print(y);
+x = elem1 + elem2;
+lista.add(x);
+print(x);
 print(lista);
 ```
 
