@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import oo2.redictado.Aroma;
+
 import oo2.redictado.AromaReport;
 import oo2.redictado.CodeSniffer;
 import oo2.redictado.antlr4.BythonLexer;
@@ -21,17 +21,13 @@ public class FlagArgumentSniffer implements CodeSniffer {
 
         // Parses the code and checks for syntax errors
         ParseTree tree = parser.program();
-        System.out.println(parser.getNumberOfSyntaxErrors());
         if (parser.getNumberOfSyntaxErrors() > 0) {
             throw new IllegalArgumentException("Syntax error");
         }
 
         // Visits the parse tree to check for bad smells
-        FlagArgumentSnifferVisitor visitor = new FlagArgumentSnifferVisitor(report, "FlagArgumentSniffer");
+        FlagArgumentVisitor visitor = new FlagArgumentVisitor(report, "FlagArgumentSniffer");
         visitor.visit(tree);
-
-        if (!report.stinks()) {
-            report.addAroma(new Aroma("FlagArgumentSniffer", "The code smells good", false));
-        }
+        
     }
 }

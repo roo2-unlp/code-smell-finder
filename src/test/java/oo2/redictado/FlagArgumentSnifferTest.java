@@ -22,8 +22,9 @@ public class FlagArgumentSnifferTest {
 		}
         """;
         
-	AromaReport report = new AromaReport(code);
+        AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
+        
 
         assertFalse(report.stinks());
         assertEquals(0, report.getAromas().size()); 
@@ -38,7 +39,7 @@ public class FlagArgumentSnifferTest {
 			}
 		""";
         
-	AromaReport report = new AromaReport(code);
+        AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
         assertFalse(report.stinks());
@@ -76,18 +77,40 @@ public class FlagArgumentSnifferTest {
     @Test
     public void testWithFlags() {
         String code = """
-           def set_equipo(tipo){
-           if tipo == "Futbol 5"{
+           def set_equipo(tipo_cancha1){
+           if tipo_cancha1 == "Futbol 5"{
                    self._equipo = 5;}
-           elif tipo == "Futbol 7"{
+           elif tipo_cancha2 == "Futbol 7"{
                    self._equipo = 7;}
-           elif tipo == "Futbol 11"{
+           elif tipo_cancha2 == "Futbol 11"{
                    self._equipo = 11;
         }
         }
         """;
         
-	AromaReport report = new AromaReport(code);
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks());
+        assertEquals(1, report.getAromas().size()); 
+    }
+    
+    
+    @Test
+    public void testWithFlagsChange() {
+        String code = """
+           def set_equipo(tipo_cancha1){
+           if "Futbol 5" == tipo_cancha1{
+                   self._equipo = 5;
+           elif "Futbol 7" == tipo_cancha1{
+                   self._equipo = 7;}
+           elif "Futbol 11" == tipo_cancha1{
+                   self._equipo = 11;
+        }
+        }
+        """;
+        
+        AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
         assertTrue(report.stinks());
@@ -97,34 +120,100 @@ public class FlagArgumentSnifferTest {
     @Test
     public void testWithTwoFlags() {
         String code = """
-           def set_tiempo(tipo){
-           if tipo == "Futbol 5"{
+           def set_tiempo(tipo_cancha2){
+           if tipo_cancha2 == "Futbol 5"{
                    self._tiempo = 60;}
-           elif tipo == "Futbol 7"{
+           elif tipo_cancha2 == "Futbol 7"{
                    self._tiempo = 80;}
-           elif tipo == "Futbol 11"{
+           elif tipo_cancha2 == "Futbol 11"{
                    self._tiempo = 90;
             }
         }
 
-        def set_equipo(tipo){
-               if tipo == "Futbol 5"{
+        def set_equipo(tipo_cancha3){
+        	   tipo_cancha3 = "Futbol 5";
+               if tipo_cancha3 == "Futbol 5"{
                        self._equipo = 5;}
-               elif tipo == "Futbol 7"{
+               elif tipo_cancha3 == "Futbol 7"{
                        self._equipo = 7;}
-               elif tipo == "Futbol 11"{
+               elif tipo_cancha3 == "Futbol 11"{
                        self._equipo = 11;
             }
         }
         """;
 
-	AromaReport report = new AromaReport(code);
+        AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
         assertTrue(report.stinks());
         assertEquals(2, report.getAromas().size()); 
     }
-	
+    
+    @Test
+    public void testWithTwoVariables() {
+        String code = """
+           def set_tiempo(tipo_cancha2){
+           tipo_cancha1 = "Futbol 5";
+           if tipo_cancha1 == "Futbol 5"{
+                   self._tiempo = 60;}
+           elif tipo_cancha2 == "Futbol 7"{
+                   self._tiempo = 80;}
+           elif tipo_cancha2 == "Futbol 11"{
+                   self._tiempo = 90;
+            }
+        }
+
+        def set_equipo(tipo_cancha3){
+        	   tipo2 = "Futbol 5";
+               if tipo2 == "Futbol 5"{
+                       self._equipo = 5;}
+               elif tipo_cancha3 == "Futbol 7"{
+                       self._equipo = 7;}
+               elif tipo_cancha3 == "Futbol 11"{
+                       self._equipo = 11;
+            }
+        }
+        """;
+
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks());
+        assertEquals(2, report.getAromas().size()); 
+    }
+    
+    @Test
+    public void testWithTwoVariablesNests() {
+        String code = """
+           def set_tiempo(tipo_cancha4, hay_iluminacion){
+           tipo1 = "Futbol 5";
+           if tipo1 == "Futbol 5" and hay_iluminacion{
+                   self._tiempo = 60;}
+           elif tipo2 == "Futbol 7" and hay_iluminacion{
+                   self._tiempo = 80;}
+           elif tipo2 == "Futbol 11" and hay_iluminacion{
+                   self._tiempo = 90;
+            }
+        }
+
+        def set_equipo(tipo3){
+        	   tipo2 = "Futbol 5";
+               if tipo2 == "Futbol 5"{
+                       self._equipo = 5;}
+               elif tipo3 == "Futbol 7"{
+                       self._equipo = 7;}
+               elif tipo3 == "Futbol 11"{
+                       self._equipo = 11;
+            }
+        }
+        """;
+
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks());
+        assertEquals(2, report.getAromas().size()); 
+    }
   
 
     @Test
