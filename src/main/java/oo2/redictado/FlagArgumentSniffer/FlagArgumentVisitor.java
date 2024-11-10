@@ -68,11 +68,21 @@ public class FlagArgumentVisitor extends BythonParserBaseVisitor<Void> {
     
     @Override
   //Obtenemos todos los parametros de las funciones. La funcion retorna los parametros solo cuando existen, por lo tanto no debemos verificar su existencia
+    public Void visitMethodDecl(BythonParser.MethodDeclContext ctx) {
+        // Reiniciamos la lista de parámetros para la nueva función
+        parametersList.clear();
+
+        // Visitamos los parámetros de la función
+        visitChildren(ctx);
+
+        // Limpiamos la lista al finalizar el análisis del método
+        parametersList.clear();
+        return null;
+    }
+
+    @Override
     public Void visitIdentifierList(BythonParser.IdentifierListContext ctx) {
-
-        ctx.ID().stream()
-	        .forEach(param -> this.parametersList.add(param));
-
+        ctx.ID().forEach(param -> this.parametersList.add(param));
         return visitChildren(ctx);
     }
 

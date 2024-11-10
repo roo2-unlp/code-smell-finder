@@ -101,13 +101,12 @@ public class FlagArgumentSnifferTest {
         String code = """
            def set_equipo(tipo_cancha1){
            if "Futbol 5" == tipo_cancha1{
-                   self._equipo = 5;
+                   self._equipo = 5;}
            elif "Futbol 7" == tipo_cancha1{
                    self._equipo = 7;}
            elif "Futbol 11" == tipo_cancha1{
-                   self._equipo = 11;
-        }
-        }
+                   self._equipo = 11;}
+            }
         """;
         
         AromaReport report = new AromaReport(code);
@@ -156,16 +155,16 @@ public class FlagArgumentSnifferTest {
            tipo_cancha1 = "Futbol 5";
            if tipo_cancha1 == "Futbol 5"{
                    self._tiempo = 60;}
-           elif tipo_cancha2 == "Futbol 7"{
+           elif tipo_cancha1 == "Futbol 7"{
                    self._tiempo = 80;}
-           elif tipo_cancha2 == "Futbol 11"{
+           elif tipo_cancha1 == "Futbol 11"{
                    self._tiempo = 90;
             }
         }
 
         def set_equipo(tipo_cancha3){
-        	   tipo2 = "Futbol 5";
-               if tipo2 == "Futbol 5"{
+        	   tipo_cancha2 = "Futbol 5";
+               if tipo_cancha2 == "Futbol 5"{
                        self._equipo = 5;}
                elif tipo_cancha3 == "Futbol 7"{
                        self._equipo = 7;}
@@ -179,7 +178,7 @@ public class FlagArgumentSnifferTest {
         codeSniffer.sniff(code, report);
 
         assertTrue(report.stinks());
-        assertEquals(2, report.getAromas().size()); 
+        assertEquals(1, report.getAromas().size()); 
     }
     
     @Test
