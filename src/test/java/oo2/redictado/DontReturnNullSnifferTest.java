@@ -30,10 +30,12 @@ public class DontReturnNullSnifferTest {
     @Test
     public void testReturnNullOnFunc() {
         String code = """
-            def divide(a, b):
-                if b == 0:
+            def divide(a, b){
+                if (b == 0) {
                    return None;
+                }
                 return a / b;
+            }
             """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -45,14 +47,18 @@ public class DontReturnNullSnifferTest {
     @Test
     public void testNoNulls() {
         String code = """
-            def get_small_numbers(numbers):
-                if numbers is None:
+            def get_small_numbers(numbers){
+                if numbers is None{
                     return [];
+                }
                 small_numbers = [];
-                for n in numbers:
-                    if (n < 10):
+                for n in numbers{
+                    if (n < 10){
                         small_numbers.append(n);
+                    }
+                }
                 return small_numbers;
+            }
             """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -64,9 +70,10 @@ public class DontReturnNullSnifferTest {
     @Test
     public void testReturnVarWithNull() {
         String code = """
-            def ejemplo5():
+            def ejemplo5(){
                 a = None;
                 return a;
+            }
             """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -80,10 +87,11 @@ public class DontReturnNullSnifferTest {
     public void testReturnVarWithNoNull() {
     	// test de una var = none y luego se le asigna un valor valido
         String code = """
-            def ejemplo5():
+            def ejemplo5(){
                 a = None;
                 a = 1;
                 return a;
+            }
             """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -95,9 +103,10 @@ public class DontReturnNullSnifferTest {
     public void testReturnImplicitExpression() {
         // test de una var = none y luego se le asigna un valor valido
         String code = """
-            def ejemplo5():
+            def ejemplo5(){
                 a = None;
                 return a + 10;
+            }
             """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -111,8 +120,9 @@ public class DontReturnNullSnifferTest {
     public void testReturnCompoundExpression() {
         // test de una var = none y luego se le asigna un valor valido
         String code = """
-            def ejemplo5():
+            def ejemplo5(){
                 return object.getFirstElement();
+            }
             """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
