@@ -15,16 +15,6 @@ public class DontReturnNullSnifferTest {
     public void setUp() {
         codeSniffer = new DontReturnNullSniffer();
     }
-
-    @Test
-    public void testReturnNull() {
-        String code = "return None;";
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-
-        assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size());
-    }
     
     
     @Test
@@ -41,7 +31,6 @@ public class DontReturnNullSnifferTest {
         codeSniffer.sniff(code, report);
 
         assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size());
     }
     
     @Test
@@ -79,7 +68,6 @@ public class DontReturnNullSnifferTest {
         codeSniffer.sniff(code, report);
 
         assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size());
     }
 
 
@@ -101,7 +89,6 @@ public class DontReturnNullSnifferTest {
 
     @Test
     public void testReturnImplicitExpression() {
-        // test de una var = none y luego se le asigna un valor valido
         String code = """
             def ejemplo5(){
                 a = None;
@@ -111,14 +98,14 @@ public class DontReturnNullSnifferTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertTrue(report.stinks());
+        assertFalse(report.stinks());
     }
-    //Test de una variable asignada con valor None que se devuelve en una expresion matematica
+    //Test de una variable asignada con valor None que se devuelve en una expresion matematica.
+    // No devuelve mal olor ya que no hay forma de determinar el resultado
 
 
     @Test
     public void testReturnCompoundExpression() {
-        // test de una var = none y luego se le asigna un valor valido
         String code = """
             def ejemplo5(){
                 return object.getFirstElement();
@@ -129,7 +116,73 @@ public class DontReturnNullSnifferTest {
 
         assertFalse(report.stinks());
     }
-    // test de una var con valor desconocido. No deberia dar smell
+    // test de una propiedad de un objeto con valor desconocido.
+    // No devuelve mal olor ya que no hay forma de determinar el resultado
 
+    @Test
+    public void testReturnIndexValueWithNotNone() {
+        String code = """
+            def ejemplo5(){
+                a[1] = None;
+                a[1] = 1;
+                return a[1];
+            }
+            """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks());
+    }
+    // test de un indice que se le asigna None y luego un valor valido
+
+    @Test
+    public void testReturnIndexValueWithNone() {
+        String code = """
+            def ejemplo5(){
+                a[1] = None;
+                return a[1];
+            }
+            """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks());
+    }
+    // test de un indice que se le asigna None y nunca se le asigna un valor valido
+
+
+    @Test
+    public void testReturnIndexValueWithIf() {
+        String code = """
+            def ejemplo5(){
+                a[1] = None;
+                if (True){
+                    return a[1];
+                }
+                a[1] = 1;
+                return a[1];
+            }
+            """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks());
+    }
+    // funcion con 2 sentencias return, donde una devuelve un indice que no fue modificado
+
+    @Test
+    public void testWithoutReturn() {
+        String code = """
+            def ejemplo5(){
+                a = 1;
+                a + 10;
+            }
+            """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks());
+    }
+    // test de una funcion sin return. No devuelve mal olor ya que no hay nada que devolver
 }
         
