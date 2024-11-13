@@ -16,7 +16,7 @@ public class AlternativeClassesTest {
     }
 
     // true = detecta mal olor. Cumple con el mal olor. Diferente interfaz 
-    // false = no cumple. Es deci, misma interfaz 
+    // false = NO TIENE EL MAL OLOR 
 
     // Caso 1: Dos clases con el mismo polimorficas,con mismos métodos y parametros identicos.
     // este caso debe retornar false, es decir que al ser identicios no presetna el mal olor.
@@ -27,7 +27,7 @@ public class AlternativeClassesTest {
                     def hacerRuido(ruido) {
                         print(ruido);
                     }
-                    def Moverse() {
+                    def Moverse(mover) {
                           mover.adelante();
                     }
                 }
@@ -107,7 +107,7 @@ public class AlternativeClassesTest {
     public void testMetodosYParametrosIgualesConContenidoDiferentes() {
         String code = """
                 class Perro {
-                    def ladrar(volume) {
+                    def ladrar(sonido) {
                         print("Ladrando fuerte");
                     }
                 }
@@ -120,7 +120,7 @@ public class AlternativeClassesTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertFalse(report.stinks()); // No debe detectar mal olor
+        assertTrue(report.stinks()); // No debe detectar mal olor
     }
 
     // Caso 5:La segunda clase tiene mas métodos que la primera
@@ -132,20 +132,13 @@ public class AlternativeClassesTest {
                     def hacerRuido(ruido) {
                         print(ruido);
                     }
-                    def Moverse() {
-                          mover.adelante();
-                    }
+
                 }
                 class Gato {
-                   def hacerRuido(ruido) {
-                        print(ruido);
+                   def hacerRuido(maullar) {
+                        print(maullar);
                     }
-                    def Moverse(mover) {
-                        mover.adelante();
-                    }
-                    def saltar(mover) {
-                        mover.saltar();
-                    }
+
                 }
                 """;
         AromaReport report = new AromaReport(code);
@@ -202,4 +195,57 @@ public void testMasDeDosClasesPolimorficas() {
     assertFalse(report.stinks()); // No debe hacer nada si hay más de dos clases
 }
 
+@Test
+    public void testConMetodosInvertidas() {
+        String code = """
+                class Perro {
+                    def Moverse(mover) {
+                          mover.adelante();
+                    }
+                    def hacerRuido(ruido) {
+                        print(ruido);
+                    }   
+                }
+                class Gato {
+                   def hacerRuido(ruido) {
+                        print(ruido);
+                    }
+                    def Moverse(mover) {
+                        mover.adelante();
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks()); // debe detectar mal olor
+    }
+
+    // SUPONEMOS QUE EL TIPO DE DATO QUE RECIBE COMO PARAMETRO ES INDIFERENTE PARA LA IMPLEMENTACION 
+@Test
+public void testParametrosInvertidos() {
+    String code = """
+            class Perro {
+                
+                def hacerRuido(ruido,rugir) {
+                    print(ruido);
+                }   
+                def Moverse(mover) {
+                      mover.adelante();
+                }
+            }
+            class Gato {
+               def hacerRuido(rugir,ruido) {
+                    print(ruido);
+                }
+                def Moverse(mover) {
+                    mover.adelante();
+                }
+            }
+            """;
+    AromaReport report = new AromaReport(code);
+    codeSniffer.sniff(code, report);
+
+    assertTrue(report.stinks()); // debe detectar mal olor
+}
 }

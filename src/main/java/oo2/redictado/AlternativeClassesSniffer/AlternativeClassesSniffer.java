@@ -16,9 +16,12 @@ public class AlternativeClassesSniffer implements CodeSniffer {
     @Override
     public void sniff(String code, AromaReport report) {
         
+        // genero el stream de caracteres
         CharStream stream = CharStreams.fromString(code);
+        // analizo creo el lexer  para la sintaxis del codigo 
         BythonLexer lexer = new BythonLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
+        // genera un parser para la semantica
         BythonParser parser = new BythonParser(tokens);
 
         
