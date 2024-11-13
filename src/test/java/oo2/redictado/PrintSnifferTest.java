@@ -107,30 +107,31 @@ perro.bark_smell();
     public void testNoBadSmell_1(){
         String code= """
                 class Animal(){
-    def init(self, tipo_animal){
-        this.tipo_animal = tipo_animal;
-    }
+                    def init(self, tipo_animal){
+                        this.tipo_animal = tipo_animal;
+                    }
+            }
 
-class Perro(Animal){
-    def ruido(){
-        print("guau guau");
-    }
-}
+                class Perro(Animal){
+                    def ruido(){
+                        print("guau guau");
+                    }
+                }
 
-class Gato(Animal){
-    def ruido(){
-        print("miau miau");
-    }
-}
+                class Gato(Animal){
+                    def ruido(){
+                        print("miau miau");
+                    }
+                }
 
-gato = Gato("Purelly");
-perro = Perro("Firulais the 1st");
+                gato = Gato("Purelly");
+                perro = Perro("Firulais the 1st");
 
-list = (gato, perro);
+                list = (gato, perro);
 
-for i in list{
-    i.ruido();
-}
+                for i in list{
+                    i.ruido();
+                }
 
                 """;
     
@@ -145,20 +146,27 @@ for i in list{
 public void testSwitchStatementSmellDetected_2() {
     // Un código con muchos elif
     String code = """
-           if x == 1:
+           if x == 1{
                print("Lunes");
-           elif x == 2:
+            }    
+            elif x == 2{
                print("Martes");
-           elif x == 3:
+            }    
+           elif x == 3{
                print("Miércoles");
-           elif x == 4:
+            }
+           elif x == 4{
                print("Jueves");
-           elif x == 5:
+            }
+           elif x == 5{
                print("Viernes");
-           elif x == 6:
+            }
+           elif x == 6{
                print("Sábado");
-           else:
+            }   
+           else{
                print("Domingo");
+            }
            """;
     AromaReport report = new AromaReport(code); //analiza el codigo para determinar si huele mal
     codeSniffer.sniff(code, report);
@@ -171,10 +179,11 @@ public void testSwitchStatementSmellDetected_2() {
     public void testNoSwitchStatementSmell_1() {
         // Un código con solo un if-else simple
         String code = """
-               if x == 1:
+               if x == 1{
                    print("Lunes");
-               else:
+                }else{
                    print("Otro día");
+                }
                """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -186,17 +195,18 @@ public void testSwitchStatementSmellDetected_2() {
     @Test
     public void testCalcularImpuestoBadSmell() {
         String code = """
-            def calcular_impuesto_bad_smell(categoria_producto, precio):
-                if categoria_producto == "alimento":
-                    return precio * 0.05  # Impuesto del 5%
-                elif categoria_producto == "ropa":
-                    return precio * 0.1  # Impuesto del 10%
-                elif categoria_producto == "electrónica":
-                    return precio * 0.15  # Impuesto del 15%
-                elif categoria_producto == "muebles":
-                    return precio * 0.12  # Impuesto del 12%
-                else:
-                    return "Categoría de producto inválida"
+            def calcular_impuesto_bad_smell(categoria_producto, precio){
+                if categoria_producto == "alimento"{
+                    return precio * 0.05;}
+                elif categoria_producto == "ropa"{
+                    return precio * 0.1;}
+                elif categoria_producto == "electrónica"{
+                    return precio * 0.15;}
+                elif categoria_producto == "muebles"{
+                    return precio * 0.12;}
+                else{
+                    return "Categoría de producto inválida";}
+            }
             """;
 
         AromaReport report = new AromaReport(code);
@@ -212,15 +222,14 @@ public void testSwitchStatementSmellDetected_2() {
     @Test
     public void testNoBadSmell_2() {
         String code = """
-            def calcular_impuesto_buen(categoria_producto, precio):
-                impuestos = {
-                    "alimento": 0.05,
-                    "ropa": 0.1,
-                    "electrónica": 0.15,
-                    "muebles": 0.12
+            def calcular_impuesto_buen(categoria_producto, precio, impuestos){
+                if categoria_producto != "libros"{
+                    return precio * impuestos.get(categoria_producto, 0);
                 }
-                return precio * impuestos.get(categoria_producto, 0) if categoria_producto 
-                != "libros" else "Categoría de producto inválida"
+                else{
+                "Categoría de producto inválida";
+                }
+            }
             """;
 
         AromaReport report = new AromaReport(code);
