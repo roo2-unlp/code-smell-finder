@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import oo2.redictado.DataClassSniffer.DataClassSniffer;
 
+
 public class DataClassSnifferTest {
     DataClassSniffer codeSniffer;
 
@@ -15,59 +16,55 @@ public class DataClassSnifferTest {
     }
     
     @Test
-    public void testDataClassWithOnlyGettersAndSetters() {
+    public void testDataClassWithOnlyAttributes() {
         String code = """
-            class Persona {
-                private String nombre;
-                private int edad;
-                
-                public String getNombre() { return nombre; }
-                public void setNombre(String nombre) { this.nombre = nombre; }
-                
-                public int getEdad() { return edad; }
-                public void setEdad(int edad) { this.edad = edad; }
+            class Persona{
+                nombre = ""
+                edad = 0
             }
             """;
         
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertTrue(report.stinks()); //Verifica que el código "huele mal"
-        assertEquals(1, report.getAromas().size()); //Verifica que se haya detectado un mal olor
+        assertTrue(report.stinks()); // Verifica que el código "huele mal"
+        assertEquals(1, report.getAromas().size()); // Verifica que se haya detectado un mal olor
     }
 
     @Test
-    public void testDataClassWithPublicFieldsOnly() {
+    public void testDataClassWithAttributesAndConstructorOnly() {
         String code = """
-            class Producto {
-                public String nombre;
-                public double precio;
+            class Producto{
+                def __init__(self, nombre, precio){
+                    self.nombre = nombre
+                    self.precio = precio
+                }
             }
             """;
         
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertTrue(report.stinks()); //Verifica que el código "huele mal"
-        assertEquals(1, report.getAromas().size()); //Verifica que se haya detectado un mal olor
+        assertTrue(report.stinks()); // Verifica que el código "huele mal"
+        assertEquals(1, report.getAromas().size()); // Verifica que se haya detectado un mal olor
     }
 
     @Test
-    public void testNonDataClassWithLogic() {
+    public void testNonDataClassWithLogicMethods() {
         String code = """
             class Cuenta {
-                private double balance;
-                
-                public void depositar(double cantidad) {
-                    if (cantidad > 0) {
-                        balance += cantidad;
-                    }
+                def __init__(self, balance=0){
+                    self.balance = balance
                 }
                 
-                public void retirar(double cantidad) {
-                    if (cantidad > 0 && cantidad <= balance) {
-                        balance -= cantidad;
-                    }
+                def depositar(self, cantidad){
+                    if cantidad > 0:
+                        self.balance += cantidad
+                }
+                
+                def retirar(self, cantidad){
+                    if cantidad > 0 and cantidad <= self.balance:
+                        self.balance -= cantidad
                 }
             }
             """;
@@ -75,49 +72,63 @@ public class DataClassSnifferTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertFalse(report.stinks()); //Verifica que el código no es detectado como "Data Class".
+        assertFalse(report.stinks()); // Verifica que el código no es detectado como "Data Class".
     }
 
     @Test
-    public void testDataClassWithConstructorsOnly() {
+    public void testDataClassWithConstructorOnly() {
         String code = """
-            class Direccion {
-                private String calle;
-                private String ciudad;
-                
-                public Direccion(String calle, String ciudad) {
-                    this.calle = calle;
-                    this.ciudad = ciudad;
+            class Direccion{
+                def __init__(self, calle, ciudad){
+                    self.calle = calle
+                    self.ciudad = ciudad
                 }
-                
-                public String getCalle() { return calle; }
-                public String getCiudad() { return ciudad; }
             }
             """;
         
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertTrue(report.stinks()); //Verifica que el código "huele mal"
+        assertTrue(report.stinks()); // Verifica que el código "huele mal"
     }
 
     @Test
     public void testMixedClassWithSomeLogic() {
         String code = """
             class Usuario {
-                private String nombre;
-                private int edad;
+                def __init__(self, nombre, edad){
+                    self.nombre = nombre
+                    self.edad = edad
+                }
                 
-                public String getNombre() { return nombre; }
-                public void setNombre(String nombre) { this.nombre = nombre; }
-                
-                public boolean esMayorDeEdad() { return edad >= 18; }
+                def es_mayor_de_edad(self){
+                    return self.edad >= 18
+                }
             }
             """;
         
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertFalse(report.stinks()); //Verifica que el código no es detectado como "Data Class".
+        assertFalse(report.stinks()); // Verifica que el código no es detectado como "Data Class".
     }
+
+    @Test
+    public void testRandomCode() {
+    // Código irrelevante o "cualquier cosa" para verificar que no sea marcado como Data Class
+        String code = """
+              print("Esto es solo texto sin relación con clases")
+        
+             def random_function(){
+                return 42
+            }
+        """;
+    
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks()); // Verifica que el código no "huele mal"
+        assertEquals(0, report.getAromas().size()); // Verifica que no se haya detectado un mal olor
+    }
+    
 }
