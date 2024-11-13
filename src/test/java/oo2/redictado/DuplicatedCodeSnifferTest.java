@@ -244,7 +244,7 @@ public class DuplicatedCodeSnifferTest {
         assertFalse(report.stinks());
     }
 
-    public void testScriptSinRepetir(){
+    public void testCodgioNoBython(){
         String code= """
            SELECT columna1, columna2
            WHERE columna3 = 'valor';
@@ -254,7 +254,7 @@ public class DuplicatedCodeSnifferTest {
         assertFalse(report.stinks());
     }
 
-    public void testScriptRepetido(){
+    public void testMasDeUnCaso(){
         String code= """
             class Mujer(){
                 def __init__(self, nombre, apellido, edad) {
