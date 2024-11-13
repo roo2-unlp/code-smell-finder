@@ -181,6 +181,26 @@ print("resta")
 
 ---
 
+### Estructura perteneciente a un método y un script diferentes
+
+**Justificación**: En este caso, el script no contiene una secuencia de operaciones idéntica a la que está definida en el método `inicio`, por lo que no hay código duplicado que identificar .
+
+```bython
+def inicio() {
+   lista.add(x);
+   print(x); 
+}
+
+y= 5
+x= 2
+elem = x + y
+print("suma" + elem)
+resta = 4 - 2
+print("resta")
+```
+
+---
+
 ### Métodos con diferente estructura
 
 **Justificación**: Los métodos `suma` y `resta` tienen operaciones diferentes en sus líneas, por lo que el sniffer no debería identificarlos como duplicados.
@@ -243,7 +263,39 @@ SELECT columna1, columna2
 
 ---
 
+### Mas de un caso 
+
+**Justificación**: Este ejemplo presenta un codigo con dos clases, con constructor y metodos identicos, en ambas clases se encuentran tres atributos duplicados (`nombre`, `apellido` y `edad`) en sus constructores, los cuales tienen el mismo nombre y valor asignado. Ademas se encuentran dos métodos (`cumpleanios` y `birthday`) que realizan la misma operación con una secuencia de líneas idéntica. Esto debería ser detectado por el sniffer como código duplicado.
+
+```bython
+ class Mujer() {
+    def __init__(self, nombre, apellido, edad) {
+        self.nombre = nombre;
+        self.apellido = apellido;
+        self.edad = edad;
+    }
+    
+    def cumpleanios(self){
+      self.edad += 1;
+    }
+}
+
+class Hombre() {
+    def __init__(self, nombre, apellido, edad) {
+        self.nombre = nombre;
+        self.apellido = apellido;
+        self.edad = edad;
+    }
+    
+    def birthday(self){
+      self.edad += 1;
+    }
+}
+```
+
+---
+
 ### ✍️ Autores
 
 - **Lautaro José Gubia**  
-- **Sofía Coria Martínez**
+- **Sofía Martínez Coria**
