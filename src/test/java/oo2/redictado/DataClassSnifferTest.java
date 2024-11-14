@@ -19,8 +19,8 @@ public class DataClassSnifferTest {
     public void testDataClassWithOnlyAttributes() {
         String code = """
             class Persona{
-                nombre = ""
-                edad = 0
+                nombre = "";
+                edad = 0;
             }
             """;
         
@@ -36,8 +36,8 @@ public class DataClassSnifferTest {
         String code = """
             class Producto{
                 def __init__(self, nombre, precio){
-                    self.nombre = nombre
-                    self.precio = precio
+                    self.nombre = nombre;
+                    self.precio = precio;
                 }
             }
             """;
@@ -53,18 +53,20 @@ public class DataClassSnifferTest {
     public void testNonDataClassWithLogicMethods() {
         String code = """
             class Cuenta {
-                def __init__(self, balance=0){
-                    self.balance = balance
+                def __init__(self, balance){
+                    self.balance = balance;
                 }
                 
-                def depositar(self, cantidad){
-                    if cantidad > 0:
-                        self.balance += cantidad
+                def depositar(cantidad){
+                    if cantidad > 0 {
+                        self.balance += cantidad;
+                    }
                 }
                 
-                def retirar(self, cantidad){
-                    if cantidad > 0 and cantidad <= self.balance:
-                        self.balance -= cantidad
+                def retirar(cantidad){
+                    if cantidad > 0 and cantidad <= self.balance{
+                        self.balance -= cantidad;
+                    }
                 }
             }
             """;
@@ -80,8 +82,8 @@ public class DataClassSnifferTest {
         String code = """
             class Direccion{
                 def __init__(self, calle, ciudad){
-                    self.calle = calle
-                    self.ciudad = ciudad
+                    self.calle = calle;
+                    self.ciudad = ciudad;
                 }
             }
             """;
@@ -97,12 +99,12 @@ public class DataClassSnifferTest {
         String code = """
             class Usuario {
                 def __init__(self, nombre, edad){
-                    self.nombre = nombre
-                    self.edad = edad
+                    self.nombre = nombre;
+                    self.edad = edad;
                 }
                 
                 def es_mayor_de_edad(self){
-                    return self.edad >= 18
+                    return self.edad >= 18;
                 }
             }
             """;
@@ -117,10 +119,10 @@ public class DataClassSnifferTest {
     public void testRandomCode() {
     // Código irrelevante o "cualquier cosa" para verificar que no sea marcado como Data Class
         String code = """
-              print("Esto es solo texto sin relación con clases")
+              print("Esto es solo texto sin relación con clases");
         
              def random_function(){
-                return 42
+                return 42;
             }
         """;
     
