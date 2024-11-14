@@ -19,19 +19,15 @@ public void setUp() {
 
 @Test
 public void testPassNullConReturn() {
-	String code= "def set_name_familia(name, cantHijos){\r\n"
-			+ "\r\n"
-			+ "if cantHijos>0{\r\n"
-			+ "\r\n"
-			+ "return generarCodigo(name, cantHijos);\r\n"
-			+ "\r\n"
-			+ "}else{\r\n"
-			+ "\r\n"
-			+ "return generarCodigo(name, None);\r\n"
-			+ "\r\n"
-			+ "}\r\n"
-			+ "\r\n"
-			+ "}";
+	String code= """
+			def set_name_familia(name, cantHijos){
+			 if cantHijos>0{
+			return generarCodigo(name, cantHijos);
+			}else{
+			 return generarCodigo(name, None);
+			 }
+			}
+			""";
 	AromaReport report= new AromaReport(code);
 	codeSniffer.sniff(code, report);
 	assertTrue(report.stinks());
@@ -40,21 +36,16 @@ public void testPassNullConReturn() {
 //Codigo erroneo porque pasa explicitamente None a la funcion generarCodigo que puede o no estar construido para soportar None.
 @Test
 public void testPassNullLLamadoConNull() {
-	String code= "def call(aux){\r\n"
-			+ "\r\n"
-			+ "if aux is None{\r\n"
-			+ "\r\n"
-			+ "print(\"No se paso un valor valido\");\r\n"
-			+ "\r\n"
-			+ "}\r\n"
-			+ "\r\n"
-			+ "}\r\n"
-			+ "\r\n"
-			+ "def main(){\r\n"
-			+ "\r\n"
-			+ "call(None);\r\n"
-			+ "\r\n"
-			+ "}";
+	String code= """
+			def call(aux){
+				if aux is None{
+				print("No se paso un valor valido");
+				}
+			 }
+			def main(){
+				call(None);
+			}
+			""";
 	AromaReport report= new AromaReport(code);
 	codeSniffer.sniff(code, report);
 	assertTrue(report.stinks());
@@ -63,11 +54,11 @@ public void testPassNullLLamadoConNull() {
 //codigo erroneo porque independientemente de que el codigo maneja el caso de que se envie None sigue siendo un error hacerlo
 @Test
 public void testPassNullLlamadoConVariablesSinNull(){
-	String code="def funcion (a,b){\r\n"
-			+ "\r\n"
-			+ "sumar(a,b);\r\n"
-			+ "\r\n"
-			+ "}";
+	String code="""
+				def funcion (a,b){
+				sumar(a,b);
+			}
+			""";
 	AromaReport report= new AromaReport(code);
 	codeSniffer.sniff(code, report);
 	assertFalse(report.stinks());
@@ -76,41 +67,87 @@ public void testPassNullLlamadoConVariablesSinNull(){
 //Codigo correcto por uso adecuado de los parametros.
 @Test
 public void testPassNullLlamarConVariableNull() {
-String code="def llamar_funcion(){\r\n"
-		+ "\r\n"
-		+ "a = None;\r\n"
-		+ "\r\n"
-		+ "generarString(a);\r\n"
-		+ "\r\n"
-		+ "}";
+String code="""
+		def llamar_funcion(){
+			a = None;
+			generarString(a);
+		}
+		""";
 AromaReport report= new AromaReport(code);
 codeSniffer.sniff(code, report);
 assertTrue(report.stinks());
 assertEquals(1,report.getAromas().size());		
 }
+
 //Codigo erroneo porque una variable fue inicializada en None y se pasa como parametro sin que esto se modifique.
 @Test
 public void testPassNullControlDeNull() {
-	String code="def comprobar(a, b){\r\n"
-			+ "\r\n"
-			+ "if a is None{\r\n"
-			+ "\r\n"
-			+ "sumar (5, b);\r\n"
-			+ "\r\n"
-			+ "}\r\n"
-			+ "\r\n"
-			+ "if b is None{\r\n"
-			+ "\r\n"
-			+ "sumar (a,5);\r\n"
-			+ "\r\n"
-			+ "}\r\n"
-			+ "\r\n"
-			+ "}";
+	String code="""
+			def comprobar(a, b){
+			if a is None{
+			 sumar (5, b);
+				}
+			if b is None{
+				sumar (a,5);
+			 }
+			}
+			""";
 	AromaReport report= new AromaReport(code);
 	codeSniffer.sniff(code, report);
 	assertFalse(report.stinks());
 	assertEquals(1,report.getAromas().size());
 }
 //Codigo correcto porque se verifica que el parametro no sea None y en caso de que lo sea se evita el uso de ese parametro.
+@Test
+public void testPassNullConAsignacionNull() {
+	String code="""
+			def comprobar(a, b){
+			sumar (b=None);
+			}
+			""";
+	AromaReport report= new AromaReport(code);
+	codeSniffer.sniff(code, report);
+	assertTrue(report.stinks());
+	assertEquals(1,report.getAromas().size());
+}
+
+	@Test
+	public void testPassNullConAsignacionNull2() {
+		String code="""
+			def comprobar(a, b){
+			sumar (b.prueba=None);
+			}
+			""";
+		AromaReport report= new AromaReport(code);
+		codeSniffer.sniff(code, report);
+		assertTrue(report.stinks());
+		assertEquals(1,report.getAromas().size());
+	}
+	@Test
+	public void testPassNullConAsignacionNull3() {
+		String code="""
+			def comprobar(a, b){
+			b.prueba=None;
+			sumar (b.prueba);
+			}
+			""";
+		AromaReport report= new AromaReport(code);
+		codeSniffer.sniff(code, report);
+		assertTrue(report.stinks());
+		assertEquals(1,report.getAromas().size());
+	}
+	@Test
+	public void testPassNullConAsignacionNull4() {
+		String code="""
+			def comprobar(a, b){
+			b[1]=None;
+			sumar (b[1]);
+			}
+			""";
+		AromaReport report= new AromaReport(code);
+		codeSniffer.sniff(code, report);
+		assertTrue(report.stinks());
+		assertEquals(1,report.getAromas().size());
+	}
 }
 
