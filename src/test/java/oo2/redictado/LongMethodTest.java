@@ -77,6 +77,45 @@ public class LongMethodTest {
 
     }
 
+    public void testAsignaciones(){
+
+        String code = 
+        """
+        
+        monitor1 = 20000;
+        monitor2 = 10000;
+        mouse = 5000;
+        teclado = 7000;
+        procesador = 20000;
+        placaVideo = 30000;
+        ram = 15000
+        fuente = 10000;
+        gabinete = 17000;
+        coolers = 3000;
+        resultado = monitor1 + monitor2 + mouse + teclado + procesador + placaVideo + ram + fuente + gabinete + coolers;
+
+        """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks()); /*daria stink por eso es true*/
+    }
+
+    public void testCorrecto(){
+
+        String code =
+        """
+        
+        def sumar (a,b,c){
+            return a + b + c;
+        }
+        
+        """;
+
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertFalse(report.stinks()); /*no daria stink por eso es flase*/
+    }
+
 
 
 }
