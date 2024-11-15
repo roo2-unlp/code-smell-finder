@@ -3,6 +3,9 @@ package oo2.redictado;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import oo2.redictado.LongMethodCodeSniffer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /* IMPORTAR SNIFFER */
@@ -10,7 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class LongMethodTest {
     
     /* DECLARAR SNIFFER */
-
+    LongMethodCodeSniffer codeSniffer;
+    @BeforeEach
+    public void setUp(){
+        codeSniffer = new LongMethodCodeSniffer();
+    }
     public void testSuperaLineasConMetodos(){
         String code = """
         llamada.setOrigen(origen)
@@ -119,3 +126,5 @@ public class LongMethodTest {
 
 
 }
+
+
