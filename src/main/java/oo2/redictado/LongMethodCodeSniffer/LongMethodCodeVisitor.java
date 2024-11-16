@@ -10,6 +10,7 @@ public class LongMethodCodeVisitor extends BythonParserBaseVisitor<Void> {
     private static final int maxCaracteresPermitidos = 500;
     private int lineasValidas = 0;
     private int caracteresValidos = 0;
+    private boolean esMetodoLlamado=false;
 
     private AromaReport report;
     private String callerName;
@@ -36,10 +37,19 @@ public class LongMethodCodeVisitor extends BythonParserBaseVisitor<Void> {
 
 
     private boolean esLlamadaAFuncion(BythonParser.StatementContext ctx) {
-        return ctx.getChildCount() > 0 && ctx.getChild(0) instanceof BythonParser.MethodCallContext;
+        esMetodoLlamado=false;
+        if (ctx.getChildCount() > 0){
+            this.visit(ctx.getChild(0));
+        }
+        return esMetodoLlamado;
+    }
+
+    public Void visitMethodCall (BythonParser.MethodCallContext ctx){
+        esMetodoLlamado = true;
+        return null;
     }
 
     private boolean esLineaValida(String texto, BythonParser.StatementContext ctx) {
-        return !texto.startsWith("#") && !esLlamadaAFuncion(ctx) && !texto.startsWith("print");
+        return !texto.startsWith("//") && !esLlamadaAFuncion(ctx) && !texto.startsWith("print");
     }
 }

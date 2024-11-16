@@ -29,9 +29,9 @@ public class LongMethodTest {
         else:
             llamada.setExtra(0)
 
-        llamada.impuestos(origen, destino)  # Corrobora que ambos números sean del mismo país y ejecuta métodos internos
-        llamada.calcular_costo(tipo)        # Calcula el costo dependiendo de si es fija o móvil
-        llamada.calcular_credito()          # Calcula la deuda restante (con variables ya modificadas)
+        llamada.impuestos(origen, destino)  // Corrobora que ambos números sean del mismo país y ejecuta métodos internos
+        llamada.calcular_costo(tipo)        // Calcula el costo dependiendo de si es fija o móvil
+        llamada.calcular_credito()         // Calcula la deuda restante (con variables ya modificadas)
         llamadas.add(get_llamada())
         """;
         AromaReport report = new AromaReport(code);
@@ -81,7 +81,6 @@ public class LongMethodTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
         assertTrue(report.stinks()); /*daria stink por eso es true*/
-
     }
 
     public void testAsignaciones(){
@@ -126,5 +125,3 @@ public class LongMethodTest {
 
 
 }
-
-
