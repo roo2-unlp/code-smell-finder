@@ -11,6 +11,7 @@ public class LongMethodCodeVisitor extends BythonParserBaseVisitor<Void> {
     private int lineasValidas = 0;
     private int caracteresValidos = 0;
     private boolean esMetodoLlamado=false;
+    private boolean esMetodo = false;
 
     private AromaReport report;
     private String callerName;
@@ -23,17 +24,29 @@ public class LongMethodCodeVisitor extends BythonParserBaseVisitor<Void> {
 
     @Override
     public Void visitStatement(BythonParser.StatementContext ctx) {
-        String texto = ctx.getText().trim();
-        if (esLineaValida(texto, ctx)) {
-            lineasValidas++;
-            caracteresValidos += texto.length();
-            if (lineasValidas > maxLineasPermitidas || caracteresValidos > maxCaracteresPermitidos) {
-                report.addAroma(new Aroma(callerName,"el metodo excede la cantidad de lineas o caracteres por lo cual es un metodo largo",true));
-                return null; //corto la ejecucion en el nodo actual una vez que se que hay mal olor
+
+        if (esMetodo){
+            String texto = ctx.getText().trim();
+            if (esLineaValida(texto, ctx)) {
+                lineasValidas++;
+                caracteresValidos += texto.length();
+                if (lineasValidas > maxLineasPermitidas || caracteresValidos > maxCaracteresPermitidos) {
+                    report.addAroma(new Aroma(callerName,"el metodo excede la cantidad de lineas o caracteres por lo cual es un metodo largo",true));
+                    return null; //corto la ejecucion en el nodo actual una vez que se que hay mal olor
+                }
             }
-        }
-        return visitChildren(ctx);
+            
+        }   
+        return visitChildren(ctx); 
     }
+
+    public Void visitMethodDeclaration (BythonParser.MethodDeclContext ctx){
+        esMetodo = true;
+        visitChildren(ctx);
+        esMetodo = false;
+        return null;
+    }
+
 
 
     private boolean esLlamadaAFuncion(BythonParser.StatementContext ctx) {
