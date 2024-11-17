@@ -7,79 +7,104 @@ import oo2.redictado.antlr4.BythonParser;
 import oo2.redictado.antlr4.BythonParserBaseVisitor;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+
 
 public class FlagArgumentVisitor extends BythonParserBaseVisitor<Void> {
     private AromaReport report;
     private String callerName;
     private List<TerminalNode> parametersList;
+    private List<String> ExpressionVarList;
+    
 
     public FlagArgumentVisitor(AromaReport report, String callerName) {
         super();
         this.report = report;
         this.callerName = callerName;
         this.parametersList = new ArrayList<TerminalNode>();
-    }
-
-    
-    
-    private boolean containsParameterIf (BythonParser.IfStatementContext ifStmt) {
-    	// Verificar si la variable usada en el if no está en la lista de parámetros
-        String expressionText = ifStmt.valueExpression().getChild(0).getText();//momentaneo
-        return parametersList.stream()
-            .anyMatch(param -> param.getText().equals(expressionText));
+        this.ExpressionVarList = new ArrayList<String>();
     }
     
-    private boolean containsParameterElif(BythonParser.IfStatementContext ifStmt) {
-        // Obtenemos el texto de cada expresión en elifClause
-        List<String> expressionsText = ifStmt.elifClause().stream()
-        	.map(expression -> expression.getChild(1).getChild(0).getText()) //momentaneo
-            .collect(Collectors.toList());
+    /**
+     * Obtiene las expresiones usadas en las cláusulas `if` y `elif`.
+     * Agrega cada subexpresión encontrada a la lista `ExpressionVarList`.
+     *
+     * @param ifStmt Contexto de la cláusula `if` del parser.
+     * @return Siempre devuelve el resultado de `visitChildren(ifStmt)`.
+     */
+    private Void getIfExpressions(BythonParser.IfStatementContext ifStmt) {
+        if (ifStmt.valueExpression() != null) {
+            processValueExpression(ifStmt.valueExpression());
+        }
 
-        // Verificamos que ninguno de los textos en expressionsText esté en parametersList
-        return expressionsText.stream()
+        ifStmt.elifClause().forEach(elif -> {
+            if (elif.valueExpression() != null) {
+                processValueExpression(elif.valueExpression());
+            }
+        });
+
+        return visitChildren(ifStmt);
+    }
+    
+    /**
+     * Procesa una expresión de tipo `ValueExpressionContext` y todas sus subexpresiones.
+     * Agrega cada subexpresión encontrada a la lista `ExpressionVarList`.
+     *
+     * @param valueExpr Contexto de la expresión del parser.
+     */
+    private void processValueExpression(BythonParser.ValueExpressionContext valueExpr) {
+    	valueExpr.valueExpression().stream()
+        	.forEach(subExpr -> processValueExpression(subExpr));
+        String expression = valueExpr.getText();
+        this.ExpressionVarList.add(expression);
+
+    }
+    
+    /**
+     * Verifica si alguna expresión en `ExpressionVarList` coincide con los parámetros definidos
+     * en la lista `parametersList`.
+     *
+     * @param ifStmt Contexto de la cláusula `if` del parser.
+     * @return `true` si alguna expresión coincide con un parámetro; `false` en caso contrario.
+     */
+    private boolean containsParameter(BythonParser.IfStatementContext ifStmt) {
+        return this.ExpressionVarList.stream()
             .anyMatch(expression -> parametersList.stream()
                 .anyMatch(param -> param.getText().equals(expression)));
     }
     
     
-    
-    private void addAromaIfContainsParameter(boolean containsParameterIf, boolean containsParameterElif) {
-	    if ((!containsParameterIf) && (!containsParameterElif)) {
-	        System.out.println("La expresión no contiene ninguno de los parámetros de la lista.");
-	    } else {
-	    	report.addAroma(new Aroma(this.callerName, "The function uses flag arguments.", true));
-	        System.out.println("La expresión contiene un parámetro de la lista.");
+    /**
+     * Agrega un objeto `Aroma` al reporte si la función analizada contiene
+     * argumentos bandera en sus estructuras de control.
+     *
+     * @param containsParameter Resultado de la verificación de parámetros en `containsParameter`.
+     */
+    private void addAromaIfContainsParameter(boolean containsParameter) {
+	    if (containsParameter) {
+	    	report.addAroma(new Aroma(this.callerName, "The function " + this.callerName + " uses flag arguments.", true));
 	    }
     }
     
     @Override
-    public Void visitIfStatement(BythonParser.IfStatementContext ifStmt) {
-  
-        boolean containsParameterIf = containsParameterIf(ifStmt);
-        
-        boolean containsParameterElif = containsParameterElif(ifStmt);
-
-        addAromaIfContainsParameter(containsParameterIf, containsParameterElif);
-    	
+    public Void visitIfStatement(BythonParser.IfStatementContext ifStmt) {   
+    	this.getIfExpressions(ifStmt);
+        boolean containsParameter = containsParameter(ifStmt);
+        addAromaIfContainsParameter(containsParameter);
+   	
         return visitChildren(ifStmt);
     }
 
     
     @Override
-  //Obtenemos todos los parametros de las funciones. La funcion retorna los parametros solo cuando existen, por lo tanto no debemos verificar su existencia
     public Void visitMethodDecl(BythonParser.MethodDeclContext ctx) {
-        // Reiniciamos la lista de parámetros para la nueva función
         parametersList.clear();
-
-        // Visitamos los parámetros de la función
         visitChildren(ctx);
-
-        // Limpiamos la lista al finalizar el análisis del método
         parametersList.clear();
+        
         return null;
     }
 
+    
     @Override
     public Void visitIdentifierList(BythonParser.IdentifierListContext ctx) {
         ctx.ID().forEach(param -> this.parametersList.add(param));

@@ -96,25 +96,6 @@ public class FlagArgumentSnifferTest {
     }
     
     
-    @Test
-    public void testWithFlagsChange() {
-        String code = """
-           def set_equipo(tipo_cancha1){
-           if "Futbol 5" == tipo_cancha1{
-                   self._equipo = 5;}
-           elif "Futbol 7" == tipo_cancha1{
-                   self._equipo = 7;}
-           elif "Futbol 11" == tipo_cancha1{
-                   self._equipo = 11;}
-            }
-        """;
-        
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-
-        assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size()); 
-    }
 
     @Test
     public void testWithTwoFlags() {
@@ -213,7 +194,27 @@ public class FlagArgumentSnifferTest {
         assertTrue(report.stinks());
         assertEquals(2, report.getAromas().size()); 
     }
-  
+    
+    @Test
+    public void testWithFlagsChange() {
+        String code = """
+           def set_equipo(tipo_cancha1){
+           if "Futbol 5" == tipo_cancha1{
+                   self._equipo = 5;}
+           elif "Futbol 7" == tipo_cancha1{
+                   self._equipo = 7;}
+           elif "Futbol 11" == tipo_cancha1{
+                   self._equipo = 11;}
+            }
+        """;
+        
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertTrue(report.stinks());
+        assertEquals(1, report.getAromas().size()); 
+    }
+    
 
     @Test
     public void testSyntaxError() {

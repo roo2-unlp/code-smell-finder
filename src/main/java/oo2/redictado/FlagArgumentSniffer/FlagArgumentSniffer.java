@@ -4,8 +4,6 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-
-
 import oo2.redictado.AromaReport;
 import oo2.redictado.CodeSniffer;
 import oo2.redictado.antlr4.BythonLexer;
@@ -28,6 +26,6 @@ public class FlagArgumentSniffer implements CodeSniffer {
         // Visits the parse tree to check for bad smells
         FlagArgumentVisitor visitor = new FlagArgumentVisitor(report, "FlagArgumentSniffer");
         visitor.visit(tree);
-        
+
     }
 }
