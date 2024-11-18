@@ -56,18 +56,12 @@ public class AlternativeClassesTest {
                     def hacerRuido(ruido) {
                         print(ruido);
                     }
-                    def Moverse() {
-                          mover.adelante();
-                    }
-                    def Sentarse(){
-                        mover.sentarse();
-                    }
                 }
                 class Gato {
                    def hacerRuido(ruido) {
                         print(ruido);
                     }
-                    def Moverse(mover) {
+                    def Moverse() {
                         mover.adelante();
                     }
                 }
@@ -82,10 +76,10 @@ public class AlternativeClassesTest {
     //en los métodos
     // devuelve true porque se llaman distinto
     @Test
-    public void testClaseMetodosDistintosMismosParametros() {
+    public void testClaseMetodosDistintosPeroMismosParametros() {
         String code = """
                 class Perro {
-                    def ladrar(volume) {
+                    def ladrar(volumen) {
                         print("Ladrando");
                     }
                 }
@@ -107,7 +101,7 @@ public class AlternativeClassesTest {
     public void testMetodosYParametrosIgualesConContenidoDiferentes() {
         String code = """
                 class Perro {
-                    def ladrar(sonido) {
+                    def ladrar(volumen) {
                         print("Ladrando fuerte");
                     }
                 }
@@ -120,13 +114,13 @@ public class AlternativeClassesTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertTrue(report.stinks()); // No debe detectar mal olor
+        assertFalse(report.stinks()); // No debe detectar mal olor
     }
 
     // Caso 5:La segunda clase tiene mas métodos que la primera
     //retorna true
     @Test
-    public void testMetodosConNombresDiferentesPeroParametrosIguales() {
+    public void testMetodosConNombresIgualesPeroParametrosDiferentes() {
         String code = """
                 class Perro {
                     def hacerRuido(ruido) {
@@ -150,8 +144,10 @@ public class AlternativeClassesTest {
 
 
      // Caso 7: Métodos con nombres diferentes, parámetros diferentes
+     // --> es necesarios tener este test? 
+     // ya tenemos uno para parametros y otro para metodos distintos 
      @Test
-     public void testMetodosConNombresDiferentesParametrosDiferentesYContenidoIgual() {
+     public void testMetodosConNombresDiferentesParametrosDiferentes() {
          String code = """
                  class Perro {
                      def ladrar(volume) {
@@ -170,7 +166,7 @@ public class AlternativeClassesTest {
          assertTrue(report.stinks()); // Debe detectar mal olor
     }
 
-    @Test
+@Test
 public void testMasDeDosClasesPolimorficas() {
     String code = """
             class Perro {
@@ -248,4 +244,16 @@ public void testParametrosInvertidos() {
 
     assertTrue(report.stinks()); // debe detectar mal olor
 }
+
+@Test
+    public void testVacio() {
+        String code = """
+                
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks()); // No debe detectar mal olor
+    }
+
 }
