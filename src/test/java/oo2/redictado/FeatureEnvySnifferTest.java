@@ -19,15 +19,15 @@ public class FeatureEnvySnifferTest {
     @Test 
     public void testSmell() {
         String code = """
-        class Persona{
-    def __init__(self, nombre, apellido){
-        self.nombre = nombre;
-        self.apellido = apellido;
-    }
-    def nombre_igual(self, nombre){
-        return self.nombre == nombre;
-    }
-}
+            class Persona{
+                def __init__(self, nombre, apellido){
+                    self.nombre = nombre;
+                    self.apellido = apellido;
+                }
+                def nombre_igual(self, nombre){
+                    return self.nombre == nombre;
+                }
+            }
         """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
