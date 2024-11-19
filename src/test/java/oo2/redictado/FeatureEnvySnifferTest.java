@@ -87,10 +87,16 @@ public class FeatureEnvySnifferTest {
                             }
 
                             def calcular_descuento(self){
-                                if self.cliente.suscripcion == "premium"{
-                                    return self.total * 0.2;
-                                }
-                                return 0;
+                                if self.cliente.suscripcion == 'premium'{
+                                return self.total * 0.2;
+                            }
+                            if self.cliente.order_history > 10{
+                                return self.total * 0.1;
+                            }
+                            if self.cliente.otra_cosa < 5{
+                                return self.total * 10;
+                            }
+                            return 0;
                             }
                         }
                         """;
