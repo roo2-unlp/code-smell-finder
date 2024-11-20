@@ -152,7 +152,7 @@ class VTV{
 	}
 	
 	def calcularPrecio(){
-		return self.auto.precioTotal(self);
+		return self.auto.precioTotal(VTV);
 	}
 }
 ```
