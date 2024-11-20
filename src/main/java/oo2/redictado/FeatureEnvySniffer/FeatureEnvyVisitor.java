@@ -31,104 +31,95 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         this.instanceVariables = new HashSet<>();
     }
 
-    /**
-     * Visita una declaración de método.
-     * Ignora el método __init__.
-     * @param ctx El contexto de la declaración de método.
-     * @return null
-     */
+
+    @Override
+    public Void visitPropertyAccess(BythonParser.PropertyAccessContext ctx) {
+        String fullAccess = ctx.getText(); // E.g., self.cliente.suscripcion
+        System.out.println("visitPropertyAccess: " + fullAccess);
+
+        if (fullAccess.contains(".")) {
+            String[] parts = fullAccess.split("\\.");
+            if (parts[0].equals("self") && parts.length > 1) {
+                String firstLevelVar = parts[1];
+                if (!instanceVariables.contains(firstLevelVar)) {
+                    // Ignorar variables internas simples
+                    return visitChildren(ctx);
+                }
+                contarAccesoExterno(firstLevelVar, null); // Registrar solo el nivel base
+            } else if (parts.length > 0) {
+                contarAccesoParametro(parts[0], parts);
+            }
+
+        }
+        return visitChildren(ctx);
+    }
+
+
+    private void contarAccesoExterno(String instanceVar, String externalAttr) {
+        // Registrar solo la variable de primer nivel
+        attributeAccessCount.put(instanceVar, attributeAccessCount.getOrDefault(instanceVar, 0) + 1);
+        System.out.println("contarAccesoExterno: " + instanceVar + " count: " + attributeAccessCount.get(instanceVar));
+    
+        // Detectar si excede el límite
+        if (attributeAccessCount.get(instanceVar) > featureEnvyLimit) {
+            report.addAroma(new Aroma(callerName, 
+                "Feature envy detected on attribute: " + instanceVar, true));
+        }
+
+    }
+    
+    private void contarAccesoParametro(String paramName, String[] parts) {
+        if (parts.length > 1) {
+            String key = paramName + "." + parts[1]; // Propiedad específica, e.g., usuario.contactos
+            attributeAccessCount.put(key, attributeAccessCount.getOrDefault(key, 0) + 1);
+            System.out.println("contarAccesoParametro: " + key + " count: " + attributeAccessCount.get(key));
+        
+            // Detecta si el acceso a este atributo excede el límite
+            if (attributeAccessCount.get(key) > featureEnvyLimit) { // Solo si EXCEDE el límite
+                report.addAroma(new Aroma(callerName, 
+                    "Feature envy detected on parameter: " + paramName + ", accessing: " + key, true));
+            }
+        }
+    }
+    
     @Override
     public Void visitMethodDecl(BythonParser.MethodDeclContext ctx) {
         String methodName = ctx.ID().getText();
-        if (methodName.equals("__init__")) {
-            // Guarda las variables de instancia inicializadas en __init__
-            ctx.block().statement().forEach(statement -> {
-                if (statement instanceof BythonParser.AssignmentContext) {
-                    BythonParser.AssignmentContext assignment = (BythonParser.AssignmentContext) statement;
-                    if (assignment.left.getText().startsWith("self.")) {
-                        String variableName = assignment.left.getText().substring(5);
-                        instanceVariables.add(variableName);
-                    }
-                }
-            });
-            return null; // Ignora el método __init__
+        System.out.println("Visiting method: " + methodName);
+
+        if (methodName.equals("_init_")) {
+            System.out.println("Ignoring _init_ method.");
+            return null; 
         }
-        return visitChildren(ctx);
+
+        // Limpiamos los contadores antes de procesar cada nuevo método
+        attributeAccessCount.clear();
+        System.out.println("Resetting attribute access count for method: " + methodName);
+
+        return visitChildren(ctx); // Continuamos con los hijos del método
     }
 
-    /**
-     * Visita una expresión encadenada y calcula su profundidad.
-     * Si la profundidad excede el límite, se registra un mal olor.
-     * @param ctx El contexto de la expresión encadenada.
-     * @return null
-     */
-    @Override
-    public Void visitChainedExpression(BythonParser.ChainedExpressionContext ctx) {
-        int depth = calculateDepth(ctx);
-        if (depth > this.featureEnvyLimit) {
-            crearAroma(depth);
-        }
-        return visitChildren(ctx);
-    }
 
-    /**
-     * Visita un acceso a propiedad.
-     * Cuenta los accesos a atributos de otras clases.
-     * @param ctx El contexto del acceso a propiedad.
-     * @return null
-     */
-    @Override
-    public Void visitPropertyAccess(BythonParser.PropertyAccessContext ctx) {
-        String propertyAccess = ctx.getText();
-        // Verifica si el acceso es a un atributo de otro objeto
-        if (propertyAccess.contains(".")) {
-            String objectName = propertyAccess.substring(0, propertyAccess.indexOf('.'));
-            if (objectName.equals("self")) {
-                // Acceso a una variable de instancia
-                String instanceVariable = propertyAccess.substring(propertyAccess.indexOf('.') + 1, propertyAccess.lastIndexOf('.'));
-                if (instanceVariables.contains(instanceVariable)) {
-                    attributeAccessCount.put(instanceVariable, attributeAccessCount.getOrDefault(instanceVariable, 0) + 1);
-                    if (attributeAccessCount.get(instanceVariable) > featureEnvyLimit) {
-                        report.addAroma(new Aroma(this.callerName, "The code has feature envy due to excessive access to attributes of instance variable " + instanceVariable, true));
-                    }
-                }
-            } else {
-                // Acceso a un parámetro
-                attributeAccessCount.put(objectName, attributeAccessCount.getOrDefault(objectName, 0) + 1);
-                if (attributeAccessCount.get(objectName) > featureEnvyLimit) {
-                    report.addAroma(new Aroma(this.callerName, "The code has feature envy due to excessive access to attributes of parameter " + objectName, true));
-                }
-            }
-        }
-        return visitChildren(ctx);
-    }
 
-    /**
-     * Visita una declaración de clase y resetea el contador de accesos a atributos.
-     * @param ctx El contexto de la declaración de clase.
-     * @return null
-     */
+
+
+
+
     @Override
     public Void visitClassDecl(BythonParser.ClassDeclContext ctx) {
         attributeAccessCount.clear();
         instanceVariables.clear();
+        System.out.println("visitClassDecl: Reset attributeAccessCount and instanceVariables");
         return visitChildren(ctx);
     }
 
-    /**
-     * Crea un aroma de mal olor y lo agrega al reporte.
-     * @param depth La profundidad de la expresión encadenada.
-     */
-    private void crearAroma(int depth) {
+
+    public void crearAroma(int depth) {
         report.addAroma(new Aroma(this.callerName, "The code has feature envy with depth " + depth, true));
     }
 
-    /**
-     * Calcula la profundidad de una expresión encadenada.
-     * @param ctx El contexto de la expresión encadenada.
-     * @return La profundidad de la expresión.
-     */
-    private int calculateDepth(BythonParser.ChainedExpressionContext ctx) {
+
+    public  int calculateDepth(BythonParser.ChainedExpressionContext ctx) {
         return ctx.chainedMethodCall().size() + ctx.propertyAccess().size();
     }
 
