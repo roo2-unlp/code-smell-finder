@@ -25,21 +25,9 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
 
     @Override
     public Void visitReturnStatement(BythonParser.ReturnStatementContext ctx) {
-        // Verificamos si la expresión en el return contiene una variable que tiene None
-        if (isReturningNone(ctx.expression())) {
-            report.addAroma(new Aroma(this.callerName, "El codigo devuelve None.", true));
-        }
-
-        return visitChildren(ctx);  // Continuamos con la visita a los hijos
+        ReturnNullCheckVisitor visitor = new ReturnNullCheckVisitor(report, callerName, variablesWithNone, indexesWithNone);
+        return visitor.visit(ctx.expression());
     }
-
-
-    // Verifica si la expresión de retorno contiene None explícitamente o implícitamente
-    private boolean isReturningNone(BythonParser.ExpressionContext exprCtx) {
-        ReturnNullCheckVisitor visitor = new ReturnNullCheckVisitor();
-        return visitor.visitExpression(exprCtx, variablesWithNone, indexesWithNone);
-    }
-
 
     @Override
     public Void visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {

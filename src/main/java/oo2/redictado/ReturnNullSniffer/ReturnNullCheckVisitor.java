@@ -1,25 +1,37 @@
 package oo2.redictado.ReturnNullSniffer;
 
+import oo2.redictado.Aroma;
+import oo2.redictado.AromaReport;
 import oo2.redictado.antlr4.BythonParser;
 import oo2.redictado.antlr4.BythonParserBaseVisitor;
 
 import java.util.List;
 
-public class ReturnNullCheckVisitor extends BythonParserBaseVisitor<Boolean> {
+public class ReturnNullCheckVisitor extends BythonParserBaseVisitor<Void> {
+    private AromaReport report;
+    private String callerName;
+    private List<String> variablesWithNone;
+    private List<String> indexesWithNone;
 
-    public ReturnNullCheckVisitor() {
-        super();
+    public ReturnNullCheckVisitor(AromaReport report, String callerName, List<String> variablesWithNone, List<String> indexesWithNone) {
+            super();
+            this.report = report;
+            this.callerName = callerName;
+            this.variablesWithNone = variablesWithNone;
+            this.indexesWithNone = indexesWithNone;
     }
 
-   // @Override
-    public Boolean visitExpression(BythonParser.ExpressionContext ctx, List<String> variablesWithNone, List<String> indexesWithNone) {
-        if (ctx.valueExpression() != null) {
-            String expr = ctx.valueExpression().getText();
-            // Verificamos si la expresión es una variable o índice con None no modificado
-            return "None".equals(expr) ||
-                    variablesWithNone.contains(expr) || indexesWithNone.contains(expr);
+    @Override
+    public Void visitExpression(BythonParser.ExpressionContext ctx){
+        // Verifica si la expresión devuelve `None` o una variable/índice con `None`
+        if (isReturningNone(ctx)) {
+            report.addAroma(new Aroma(callerName, "El código devuelve None.", true));
         }
-        return false;
+        return visitChildren(ctx);
+    }
+
+    public boolean isReturningNone(BythonParser.ExpressionContext ctx) {
+        return ctx.getText().equals("None") || this.variablesWithNone.contains(ctx.getText()) || this.indexesWithNone.contains(ctx.getText());
     }
 
 
