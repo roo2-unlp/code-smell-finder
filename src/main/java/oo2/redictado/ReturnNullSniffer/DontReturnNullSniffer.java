@@ -12,6 +12,8 @@ import oo2.redictado.PrintSniffer.PrintSnifferVisitor;
 import oo2.redictado.antlr4.BythonLexer;
 import oo2.redictado.antlr4.BythonParser;
 
+import java.util.List;
+
 public class DontReturnNullSniffer implements CodeSniffer {
 	
 	public void sniff(String code, AromaReport report) {
@@ -28,8 +30,29 @@ public class DontReturnNullSniffer implements CodeSniffer {
             throw new IllegalArgumentException("Syntax error");
         }
 
-        // Visits the parse tree to check for bad smells
+        // Creates the visitors
+//        SimpleAssignmentVisitor simpleAssignmentVisitor = new SimpleAssignmentVisitor();
+//        IndexAssignmentVisitor indexAssignmentVisitor = new IndexAssignmentVisitor();
+//
+//        // Visits the parse tree to get the variables and indexes that are assigned None
+//        simpleAssignmentVisitor.visit(tree);
+//        indexAssignmentVisitor.visit(tree);
+
+        // variables with none and modified variables
+//        List<String> variablesWithNone = simpleAssignmentVisitor.getVariablesWithNone();
+//        List<String> modifiedVariables = simpleAssignmentVisitor.getModifiedVariables();
+//
+//        // indexes with none and modified indexes
+//        List<String> indexesWithNone = indexAssignmentVisitor.getIndexesWithNone();
+//        List<String> modifiedIndexes = indexAssignmentVisitor.getModifiedIndexes();
+//
+//        // Visits the parse tree to check for bad smells and send the lists with the variables and indexes that are assigned None
+//        DontReturnNullSnifferVisitor visitor = new DontReturnNullSnifferVisitor(report, "DontReturnNullSniffer",
+//                variablesWithNone, indexesWithNone, modifiedVariables, modifiedIndexes);
+//        visitor.visit(tree);
+
         DontReturnNullSnifferVisitor visitor = new DontReturnNullSnifferVisitor(report, "DontReturnNullSniffer");
+
         visitor.visit(tree);
 
         if (!report.stinks()) {

@@ -14,7 +14,7 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
     private List<String> variablesWithNone;
     private List<String> indexesWithNone;
 
-    public DontReturnNullSnifferVisitor(AromaReport report, String callerName) {
+    public DontReturnNullSnifferVisitor(AromaReport report, String callerName){
         super();
         this.report = report;
         this.callerName = callerName;
@@ -36,37 +36,11 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
 
     // Verifica si la expresión de retorno contiene None explícitamente o implícitamente
     private boolean isReturningNone(BythonParser.ExpressionContext exprCtx) {
-        if (exprCtx.valueExpression() != null) {
-            return checkValueExpression(exprCtx.valueExpression());
-        }
-        return false;
+        ReturnNullCheckVisitor visitor = new ReturnNullCheckVisitor();
+        return visitor.visitExpression(exprCtx, variablesWithNone, indexesWithNone);
     }
 
-    // Modificación en checkValueExpression para manejar variables y accesos a indices
-    private boolean checkValueExpression(BythonParser.ValueExpressionContext ctx) {
-        if (ctx == null) return false;
 
-        // Si la expresión es "None"
-        if (ctx.getText().equals("None")) {
-            return true;
-        }
-
-        // Si es una variable, verifica si fue asignada a None y nunca fue modificada
-        if (ctx.callableExpression() != null) {
-            String variableName = ctx.callableExpression().getText();
-            return this.variablesWithNone.contains(variableName);
-        }
-
-        // Si es un acceso por indice, verifica si fue asignado a None y nunca fue modificado
-        if(ctx.indexAccess() != null){
-            String indexName = ctx.indexAccess().getText();
-            return this.indexesWithNone.contains(indexName);
-        }
-
-        return false;
-    }
-
-    // Obtenemos variables asignadas con None
     @Override
     public Void visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
         String variableName = ctx.ID().getText();
@@ -74,9 +48,9 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
 
         // si el valor de la variable es None, la agrega a la lista
         if ("None".equals(assignedValue)) {
-             if (!variablesWithNone.contains(variableName)) {
-                  variablesWithNone.add(variableName);
-             }
+            if (!variablesWithNone.contains(variableName)) {
+                variablesWithNone.add(variableName);
+            }
         } else {
             // Si se asigna un valor distinto a None, remueve la variable de la lista
             variablesWithNone.remove(variableName);
@@ -85,8 +59,6 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
         return visitChildren(ctx);
     }
 
-
-    // Obtenemos indices asignados con None
     @Override
     public Void visitIndexAssignment(BythonParser.IndexAssignmentContext ctx) {
         String indexName = ctx.indexAccess().getText();
