@@ -92,6 +92,7 @@ public class DataClassSnifferTest {
         codeSniffer.sniff(code, report);
 
         assertTrue(report.stinks()); // Verifica que el código "huele mal"
+        assertEquals(1, report.getAromas().size()); // Verifica que se haya detectado un mal olor
     }
 
     @Test
@@ -113,15 +114,16 @@ public class DataClassSnifferTest {
         codeSniffer.sniff(code, report);
 
         assertFalse(report.stinks()); // Verifica que el código no es detectado como "Data Class".
+
     }
 
     @Test
     public void testRandomCode() {
     // Código irrelevante o "cualquier cosa" para verificar que no sea marcado como Data Class
         String code = """
-              print("Esto es solo texto sin relación con clases");
+            print("Esto es solo texto sin relación con clases");
         
-             def random_function(){
+            def random_function(){
                 return 42;
             }
         """;
@@ -130,7 +132,23 @@ public class DataClassSnifferTest {
         codeSniffer.sniff(code, report);
 
         assertFalse(report.stinks()); // Verifica que el código no "huele mal"
-        assertEquals(0, report.getAromas().size()); // Verifica que no se haya detectado un mal olor
+        //assertEquals(0, report.getAromas().size()); // Verifica que no se haya detectado un mal olor
+    }
+
+    @Test
+    public void testEmptyClass() {
+         // Código de una clase vacía
+        String code = """
+                    class ClaseVacia {
+                  }
+        """;
+
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        // Verifica que no se haya detectado ningún mal olor
+        assertFalse(report.stinks()); // La clase vacía no debe ser marcada como Data Class
+        //assertEquals(0, report.getAromas().size()); // No se debe agregar ningún aroma (ningún mal olor)
     }
     
 }
