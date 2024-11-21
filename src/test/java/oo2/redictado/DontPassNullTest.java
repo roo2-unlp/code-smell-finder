@@ -122,7 +122,7 @@ public class DontPassNullTest {
 	public void testPassImplicitAssignment() {
 		String code="""
 			def llamar_funcion(){
-				generarString(a += None);
+				generarString(a+= None);
 			}
 			""";
 		AromaReport report= new AromaReport(code);

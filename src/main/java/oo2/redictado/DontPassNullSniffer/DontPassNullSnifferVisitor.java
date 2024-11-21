@@ -14,42 +14,46 @@ public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
     private AromaReport report;
     private String callerName;
     private List<String> variablesWithNone;
+    private ArgumentListVisitor argumentListVisitor;
 
     public DontPassNullSnifferVisitor(AromaReport report, String callerName) {
         super();
         this.report = report;
         this.callerName = callerName;
         this.variablesWithNone = new ArrayList<>();
+        this.argumentListVisitor = new ArgumentListVisitor(report, callerName);
     }
 
     @Override
     public Void visitArgumentList(BythonParser.ArgumentListContext ctx) {
         //Obtengo la lista de argumentos enviados a la funcion y la convierto en un string
-        List<ExpressionContext> argumentVariable = ctx.expression();
+        this.argumentListVisitor.setVariablesWithNone(this.variablesWithNone);
+        this.argumentListVisitor.visitChildren(ctx);
+        /*List<ExpressionContext> argumentVariable = ctx.expression();
         for (ExpressionContext expression:argumentVariable) {
             if (isPassNone(expression)) {
                 report.addAroma(new Aroma(this.callerName, "El codigo envia None.", true));
             }
-        }
+        }*/
         return visitChildren(ctx);
     }
-    private boolean isPassNone(ExpressionContext exprCtx) {
-            if (exprCtx.assignment() != null) {
-                return checkAssignment(exprCtx.assignment());
+   /* private boolean isPassNone(ExpressionContext exprCtx) {
+        if (exprCtx.assignment() != null) {
+            return checkAssignment(exprCtx.assignment());
+        } else {
+            if (exprCtx.valueExpression().getText().equals("None")) {
+                return true;
             } else {
-                if (exprCtx.valueExpression().getText().equals("None")) {
-                    return true;
-                } else {
-                    return variablesWithNone.contains((exprCtx.valueExpression().getText()));
-                }
+                return variablesWithNone.contains((exprCtx.valueExpression().getText()));
             }
-    }
+        }
+    }*/
 
     // Modificación en checkValueExpression para manejar variables y accesos a indices
     private boolean checkAssignment(BythonParser.AssignmentContext ctx) {
         if (ctx.simpleAssignment() != null) {
             visitSimpleAssignment(ctx.simpleAssignment());
-          return this.variablesWithNone.contains(ctx.simpleAssignment().ID().getText());
+            return this.variablesWithNone.contains(ctx.simpleAssignment().ID().getText());
         }
 
         if (ctx.indexAssignment() != null) {
@@ -84,10 +88,9 @@ public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
                 variablesWithNone.add(variableName);
             }
         }else{
-                variablesWithNone.remove(variableName);
-            }
-            return visitChildren(ctx);
+            variablesWithNone.remove(variableName);
+        }
+        return visitChildren(ctx);
 
     }
 }
-
