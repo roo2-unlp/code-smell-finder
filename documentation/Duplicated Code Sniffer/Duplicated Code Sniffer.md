@@ -10,7 +10,7 @@ Dificulta la comprensión y el mantenimiento del software. Duplicar código sign
 Consideramos código duplicado cualquier secuencia o subsecuencia de líneas consecutivas de código que sea textualmente idéntica en contenido y orden. Esto incluye:
 
 Bloques parciales: Coincidencias exactas dentro de métodos, funciones o scripts, aunque no abarque el método completo.
-Múltiples ubicaciones: Repeticiones de las mismas líneas en diferentes métodos, scripts o archivos.
+Múltiples ubicaciones: Repeticiones de las mismas líneas en diferentes métodos, scripts.
 
 ---
 
@@ -18,7 +18,7 @@ Múltiples ubicaciones: Repeticiones de las mismas líneas en diferentes método
 
 + **Secuencia de líneas y texto idénticos en scripts**: nuestro umbral de deteccion toma 4 lineas de codigo exacto en scripts
 + **Código Bython**: el sniffer solo analizará sintaxis escrita en Bython; otros lenguajes serán ignorados.
-+ **Detección**: el sniffer identificará todos los errores y los alertará al finalizar el análisis completo del archivo. Si el archivo no corresponde a Bython, detendrá su ejecución en la primera línea donde detecte un error de sintaxis.
++ **Detección**: el sniffer identificará todos los codigos duplicados que cumplan la definicion y los alertará al finalizar el análisis completo del archivo. Si el archivo no corresponde a Bython, detendrá su ejecución en la primera línea donde detecte un error de sintaxis.
 
 ---
 
