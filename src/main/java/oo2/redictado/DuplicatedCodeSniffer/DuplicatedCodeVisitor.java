@@ -47,9 +47,14 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
     }
     
     public Void visitMethodParamList(BythonParser.MethodParamListContext ctx){
-        elementos.add(ctx.getText());
+        // Solo agrega los parámetros si no están vacíos
+        if (ctx.getChildren().size() > 0) {
+            elementos.add(paramText);
+        }
+
         return visitChildren(ctx);
     }
+    
 
     public void getElementos() {
         System.out.print("Contenido de métodos y scripts: " + "\n");

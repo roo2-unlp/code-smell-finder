@@ -32,7 +32,9 @@ public class DuplicatedCodeSniffer implements CodeSniffer{
         // Visits the parse tree to check for bad smells
         DuplicatedCodeVisitor visitor = new DuplicatedCodeVisitor();
         visitor.visit(tree);
+        System.out.println("Duplicated code: ");
         visitor.getElementos();
+        System.out.println("End of duplicated code"+"\n");
         
         /* 
         if (!report.stinks()) {
