@@ -173,10 +173,51 @@ class Hombre() {
     print(3);  
 }  
 ```
+---  
+
+### **6. Dos métodos con cuerpos diferentes**  
+
+**Justificación:** El cuerpo de `metodoA` y `metodoB` contiene líneas de código distintas. No se consideran duplicados.  
+
+```bython
+class Ejemplo() {  
+    def metodoA() {  
+        x = 1;  
+        print(x);  
+        y = 2;
+        print(y)  
+    }  
+
+    def metodoB() {  
+        print(1);  
+        print(2);  
+        print(3);  
+    }  
+}  
+```  
+---
+
+### **7. Código externo diferente al cuerpo de un método** 
+
+**Justificación:** El bloque de código externo es diferente al cuerpo del método `metodoA`. Las instrucciones no coinciden en contenido ni en orden, por lo que no se consideran duplicados.  
+
+```bython
+class Ejemplo() {  
+    def metodoA() {  
+        print(1);  
+        print(2);  
+        print(3);  
+    }  
+}  
+
+x + 1; 
+print(x);  
+print("hola");  
+```
 
 ---  
 
-### **6. Código no escrito en Bython**  
+### **8. Código no escrito en Bython**  
 
 **Justificación:** Este ejemplo contiene código en SQL, el cual no será analizado por el sniffer ya que no está escrito en Bython.  
 
