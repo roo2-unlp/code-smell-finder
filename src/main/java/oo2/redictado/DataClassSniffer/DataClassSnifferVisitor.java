@@ -96,20 +96,27 @@ public class DataClassSnifferVisitor extends BythonParserBaseVisitor<Void> {
     /**
      * Verifica si un método contiene lógica (declaraciones como if, while, operaciones, etc.).
      */
+    // private boolean hasMethodLogic(BythonParser.MethodDeclContext methodDecl) {
+    //     if (methodDecl.block() != null) {
+    //         for (BythonParser.StatementContext statement : methodDecl.block().statement()) {
+    //             if (statement.ifStatement() != null ||
+    //                 statement.whileStatement() != null ||
+    //                 statement.forStatement() != null ||
+    //                 statement.returnStatement() != null ||
+    //                 statement.expression() != null) {
+    //                 return true; // El método contiene lógica
+    //             }
+    //         }
+    //     }
+    //     return false; // No tiene lógica
+    // }
+
     private boolean hasMethodLogic(BythonParser.MethodDeclContext methodDecl) {
-        if (methodDecl.block() != null) {
-            for (BythonParser.StatementContext statement : methodDecl.block().statement()) {
-                if (statement.ifStatement() != null ||
-                    statement.whileStatement() != null ||
-                    statement.forStatement() != null ||
-                    statement.returnStatement() != null ||
-                    statement.expression() != null) {
-                    return true; // El método contiene lógica
-                }
-            }
-        }
-        return false; // No tiene lógica
+        MethodLogicVisitor logicVisitor = new MethodLogicVisitor();
+        methodDecl.accept(logicVisitor); // Recorre todo el método
+        return logicVisitor.hasLogic();  // Devuelve si encontró lógica
     }
+    
 
     /**
         * Verifica si se debe continuar recorriendo nodos.
