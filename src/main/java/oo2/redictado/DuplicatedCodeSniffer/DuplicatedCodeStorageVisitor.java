@@ -20,7 +20,7 @@ public class DuplicatedCodeStorageVisitor extends BythonParserBaseVisitor<Void> 
         this.elemento = ctx.getText();
         System.out.print("elemento: " + "\n");
         System.out.println(elemento);
-        duplicateCodeFinderVisitor = new DuplicateCodeFinderVisitor(elemento);
+        duplicateCodeFinderVisitor = new DuplicateCodeFinderVisitor(ctx);
         duplicateCodeFinderVisitor.visitBlock(ctx);
         
         return visitChildren(ctx);
