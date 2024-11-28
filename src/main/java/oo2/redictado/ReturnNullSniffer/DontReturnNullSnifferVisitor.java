@@ -11,20 +11,18 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
 	private AromaReport report;
     private String callerName;
     private List<String> variablesWithNone;
-    private List<String> indexesWithNone;
+    private ExpressionVisitor visitor;
 
     public DontReturnNullSnifferVisitor(AromaReport report, String callerName){
         super();
         this.report = report;
         this.callerName = callerName;
         this.variablesWithNone = new ArrayList<>();
-        this.indexesWithNone = new ArrayList<>();
-
+        this.visitor = new ExpressionVisitor(report, callerName, variablesWithNone);
     }
 
     @Override
     public Void visitReturnStatement(BythonParser.ReturnStatementContext ctx) {
-        ExpressionVisitor visitor = new ExpressionVisitor(report, callerName, variablesWithNone, indexesWithNone);
         return visitor.visit(ctx.expression());
     }
 
@@ -53,12 +51,12 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
 
         // si se asigna None a la posicion de un indice, se agrega a la lista el indice
         if ("None".equals(assignedValue)) {
-            if (!indexesWithNone.contains(indexName)) {
-                indexesWithNone.add(indexName);
+            if (!variablesWithNone.contains(indexName)) {
+                variablesWithNone.add(indexName);
             }
         } else {
             // Si se asigna un valor distinto a None, remueve el indice de la lista
-            indexesWithNone.remove(indexName);
+            variablesWithNone.remove(indexName);
         }
         return visitChildren(ctx);
     }

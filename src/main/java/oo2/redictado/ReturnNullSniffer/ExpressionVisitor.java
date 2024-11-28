@@ -13,12 +13,11 @@ public class ExpressionVisitor extends BythonParserBaseVisitor<Void> {
     private List<String> variablesWithNone;
     private List<String> indexesWithNone;
 
-    public ExpressionVisitor(AromaReport report, String callerName, List<String> variablesWithNone, List<String> indexesWithNone) {
+    public ExpressionVisitor(AromaReport report, String callerName, List<String> variablesWithNone) {
             super();
             this.report = report;
             this.callerName = callerName;
             this.variablesWithNone = variablesWithNone;
-            this.indexesWithNone = indexesWithNone;
     }
 
     @Override
@@ -31,7 +30,7 @@ public class ExpressionVisitor extends BythonParserBaseVisitor<Void> {
     }
 
     public boolean isReturningNone(BythonParser.ExpressionContext ctx) {
-        return ctx.getText().equals("None") || this.variablesWithNone.contains(ctx.getText()) || this.indexesWithNone.contains(ctx.getText());
+        return ctx.getText().equals("None") || this.variablesWithNone.contains(ctx.getText());
     }
 
 
