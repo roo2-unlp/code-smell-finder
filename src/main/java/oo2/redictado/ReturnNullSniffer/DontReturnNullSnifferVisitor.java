@@ -3,7 +3,6 @@ package oo2.redictado.ReturnNullSniffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import oo2.redictado.Aroma;
 import oo2.redictado.AromaReport;
 import oo2.redictado.antlr4.BythonParser;
 import oo2.redictado.antlr4.BythonParserBaseVisitor;
@@ -25,7 +24,7 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
 
     @Override
     public Void visitReturnStatement(BythonParser.ReturnStatementContext ctx) {
-        ReturnNullCheckVisitor visitor = new ReturnNullCheckVisitor(report, callerName, variablesWithNone, indexesWithNone);
+        ExpressionVisitor visitor = new ExpressionVisitor(report, callerName, variablesWithNone, indexesWithNone);
         return visitor.visit(ctx.expression());
     }
 

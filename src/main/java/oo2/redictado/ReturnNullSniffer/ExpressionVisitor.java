@@ -7,13 +7,13 @@ import oo2.redictado.antlr4.BythonParserBaseVisitor;
 
 import java.util.List;
 
-public class ReturnNullCheckVisitor extends BythonParserBaseVisitor<Void> {
+public class ExpressionVisitor extends BythonParserBaseVisitor<Void> {
     private AromaReport report;
     private String callerName;
     private List<String> variablesWithNone;
     private List<String> indexesWithNone;
 
-    public ReturnNullCheckVisitor(AromaReport report, String callerName, List<String> variablesWithNone, List<String> indexesWithNone) {
+    public ExpressionVisitor(AromaReport report, String callerName, List<String> variablesWithNone, List<String> indexesWithNone) {
             super();
             this.report = report;
             this.callerName = callerName;
