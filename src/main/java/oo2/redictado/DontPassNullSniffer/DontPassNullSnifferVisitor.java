@@ -28,14 +28,14 @@ public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
     public Void visitArgumentList(BythonParser.ArgumentListContext ctx) {
         //Obtengo la lista de argumentos enviados a la funcion y la convierto en un string
 
-        this.argumentListVisitor.visitChildren(ctx);
+        return this.argumentListVisitor.visit(ctx);
         /*List<ExpressionContext> argumentVariable = ctx.expression();
         for (ExpressionContext expression:argumentVariable) {
             if (isPassNone(expression)) {
                 report.addAroma(new Aroma(this.callerName, "El codigo envia None.", true));
             }
         }*/
-        return visitChildren(ctx);
+       // return visitChildren(ctx);
     }
    /* private boolean isPassNone(ExpressionContext exprCtx) {
         if (exprCtx.assignment() != null) {

@@ -1,5 +1,6 @@
 package oo2.redictado.DontPassNullSniffer;
 
+import com.sun.jdi.VoidType;
 import oo2.redictado.Aroma;
 import oo2.redictado.AromaReport;
 import oo2.redictado.antlr4.BythonParser;
@@ -26,7 +27,6 @@ public class ArgumentListVisitor extends BythonParserBaseVisitor<Void> {
         if (ctx.expression().getText().equals("None")){
             report.addAroma(new Aroma(this.callerName, "El codigo envia None.", true));
         }
-
         return visitChildren(ctx);
     }
 
@@ -38,29 +38,17 @@ public class ArgumentListVisitor extends BythonParserBaseVisitor<Void> {
         return visitChildren(ctx);
     }
 
-   /* @Override
-    public Void visitCallableExpression(BythonParser.CallableExpressionContext ctx) {
-        if (ctx.getText().equals("None")){
+    @Override
+    public Void visitExpression(BythonParser.ExpressionContext ctx) {
+        System.out.println("CONTEXTOOO"+ctx.getText());
+        if (this.isReturningNone(ctx)){
             report.addAroma(new Aroma(this.callerName, "El codigo envia None.", true));
         }
         return visitChildren(ctx);
-    }*/
-
-    @Override
-    public Void visitValueExpression(BythonParser.ValueExpressionContext ctx){
-        if (this.variablesWithNone.contains(ctx.getText())){
-            report.addAroma(new Aroma(this.callerName, ctx.getText(), true));
-        }
-        return visitChildren(ctx);
     }
 
-    @Override
-    public Void visitExpression(BythonParser.ExpressionContext ctx) {
-        if (ctx.getRuleIndex() == 1){
-            if (ctx.getText().equals("None")){
-                report.addAroma(new Aroma(this.callerName, "El codigo envia None.", true));
-            }
-        }
-        return visitChildren(ctx);
+    public boolean isReturningNone(BythonParser.ExpressionContext ctx) {
+        return ctx.getText().equals("None") || this.variablesWithNone.contains(ctx.getText());
     }
+
 }

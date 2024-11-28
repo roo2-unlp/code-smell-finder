@@ -51,7 +51,7 @@ statement
 assignment
     : simpleAssignment
     | implicitAssignment
-    | compoundAssignment
+    | compoundAssignmenta
     | indexAssignment
     ;
 
