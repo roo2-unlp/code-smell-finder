@@ -21,13 +21,13 @@ public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
         this.report = report;
         this.callerName = callerName;
         this.variablesWithNone = new ArrayList<>();
-        this.argumentListVisitor = new ArgumentListVisitor(report, callerName);
+        this.argumentListVisitor = new ArgumentListVisitor(report, callerName, variablesWithNone);
     }
 
     @Override
     public Void visitArgumentList(BythonParser.ArgumentListContext ctx) {
         //Obtengo la lista de argumentos enviados a la funcion y la convierto en un string
-        this.argumentListVisitor.setVariablesWithNone(this.variablesWithNone);
+
         this.argumentListVisitor.visitChildren(ctx);
         /*List<ExpressionContext> argumentVariable = ctx.expression();
         for (ExpressionContext expression:argumentVariable) {

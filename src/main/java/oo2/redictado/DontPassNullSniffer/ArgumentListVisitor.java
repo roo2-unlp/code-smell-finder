@@ -14,15 +14,12 @@ public class ArgumentListVisitor extends BythonParserBaseVisitor<Void> {
     private String callerName;
     private List<String> variablesWithNone;
 
-    public ArgumentListVisitor(AromaReport report, String callerName) {
+    public ArgumentListVisitor(AromaReport report, String callerName, List<String> variablesWithNone) {
         this.report = report;
         this.callerName = callerName;
-        this.variablesWithNone = new ArrayList<String>();
-    }
-
-    public void setVariablesWithNone(List<String> variablesWithNone) {
         this.variablesWithNone = variablesWithNone;
     }
+
 
     @Override
     public Void visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
