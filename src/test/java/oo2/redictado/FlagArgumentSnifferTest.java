@@ -24,7 +24,6 @@ public class FlagArgumentSnifferTest {
         
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        
 
         assertFalse(report.stinks());
         assertEquals(0, report.getAromas().size()); 
@@ -121,16 +120,16 @@ public class FlagArgumentSnifferTest {
             }
         }
         """;
-
+   
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-
+        
         assertTrue(report.stinks());
         assertEquals(2, report.getAromas().size()); 
     }
     
     @Test
-    public void testWithTwoVariables() {
+    public void testWithThreeVariables() {
         String code = """
            def set_tiempo(tipo_cancha2){
            tipo_cancha1 = "Futbol 5";
@@ -151,6 +150,16 @@ public class FlagArgumentSnifferTest {
                        self._equipo = 7;}
                elif tipo_cancha3 == "Futbol 11"{
                        self._equipo = 11;
+            }
+        }
+        def set_referi(tipo_cancha1){
+        	   tipo_cancha3 = "Futbol 5";
+               if tipo_cancha3 == "Futbol 5"{
+                       self._referi = "Garcia Pedro";}
+               elif tipo_cancha2 == "Futbol 7"{
+                       self._referi = "Perez Guzman Joaquin";}
+               elif tipo_cancha2 == "Futbol 11"{
+                       self._referi = "Strabinsky Victor";
             }
         }
         """;
