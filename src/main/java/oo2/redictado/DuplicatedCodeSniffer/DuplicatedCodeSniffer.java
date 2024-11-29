@@ -19,25 +19,26 @@ public class DuplicatedCodeSniffer implements CodeSniffer{
         BythonLexer lexer = new BythonLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         BythonParser parser = new BythonParser(tokens);
+        
         // Parses the code and checks for syntax errors
         ParseTree tree = parser.program();
         
-        /*
+        /* 
         System.out.println(parser.getNumberOfSyntaxErrors());
         if (parser.getNumberOfSyntaxErrors() > 0) {
             throw new IllegalArgumentException("Syntax error");
         }
         */
+        
 
         // Visits the parse tree to check for bad smells
-        DuplicatedCodeStorageVisitor visitor = new DuplicatedCodeStorageVisitor();
+        DuplicatedCodeStorageVisitor visitor = new DuplicatedCodeStorageVisitor(report);
         visitor.visit(tree);
         
-        /* 
         if (!report.stinks()) {
             report.addAroma(new Aroma("DuplicatedCodeSniffer", "The code smells good", false));
         }
-        */
+        
     }
     
 }

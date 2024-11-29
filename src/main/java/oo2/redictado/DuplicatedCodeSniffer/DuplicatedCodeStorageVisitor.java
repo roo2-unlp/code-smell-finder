@@ -1,40 +1,41 @@
 package oo2.redictado.DuplicatedCodeSniffer;
 
+import oo2.redictado.AromaReport;
 import oo2.redictado.antlr4.BythonParser;
+import oo2.redictado.antlr4.BythonParser.MethodDeclContext;
 import oo2.redictado.antlr4.BythonParserBaseVisitor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class DuplicatedCodeStorageVisitor extends BythonParserBaseVisitor<Void> {
-    private String elemento;
     private DuplicateCodeFinderVisitor duplicateCodeFinderVisitor;
+    private BythonParser.ProgramContext rootNode;
+    private AromaReport report;
 
-    public DuplicatedCodeStorageVisitor() {
+    public DuplicatedCodeStorageVisitor(AromaReport report) {
         super();
+        this.report = report;
     }
 
     @Override
     public Void visitBlock(BythonParser.BlockContext ctx) {
-        this.elemento = ctx.getText();
-        System.out.print("elemento: " + "\n");
-        System.out.println(elemento);
-        duplicateCodeFinderVisitor = new DuplicateCodeFinderVisitor(ctx);
-        duplicateCodeFinderVisitor.visitBlock(ctx);
-        
+        if ((ctx.depth() < 4) || (ctx.getParent() instanceof MethodDeclContext)) {
+            this.duplicateCodeFinderVisitor = new DuplicateCodeFinderVisitor(ctx);
+            this.duplicateCodeFinderVisitor.visit(this.rootNode);
+            if (this.duplicateCodeFinderVisitor.getReport().stinks()) {
+                this.duplicateCodeFinderVisitor.getReport().getAromas().forEach(aroma -> {
+                    this.report.addAroma(aroma);
+                });
+            }
+        }
         return visitChildren(ctx);
     }
 
-   
-    public Void visitProgram(BythonParser.StatementContext ctx) {
-        return visitChildren(ctx);
+    public AromaReport getReport() {
+        return report;
     }
-    
 
-    public void getElementos() {
-        System.out.print("metodo donde se para el visitor: " + "\n");
-        System.out.println(elemento);
+    public Void visitProgram(BythonParser.ProgramContext ctx) {
+        this.rootNode = ctx;
+        return visitChildren(ctx);
     }
     
 }
