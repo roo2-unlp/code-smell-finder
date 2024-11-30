@@ -13,10 +13,9 @@ public class DuplicatedCodeSnifferTest {
     @BeforeEach
     public void setUp() {
         codeSniffer = new DuplicatedCodeSniffer();
-    }
-    
-    
+    } 
 
+    
     @Test
     public void testDuplicateMethod() {
         String code = """
@@ -40,7 +39,8 @@ public class DuplicatedCodeSnifferTest {
         assertEquals(2, report.getAromas().size());
     }
 
-    
+     
+
     @Test
     public void testMoreOfOneDuplicateMethod() {
         String code = """
@@ -150,7 +150,7 @@ public class DuplicatedCodeSnifferTest {
         assertTrue(report.stinks());
         assertEquals(2, report.getAromas().size());
     }
-
+    
     @Test
     public void testMoreOfOneDuplicateMethodWithControlStatements() {
         String code = """
@@ -392,6 +392,7 @@ public class DuplicatedCodeSnifferTest {
         assertEquals(1, report.getAromas().size());
     }
 
+    
     @Test
     public void testDuplicateMethodWithScriptAndControlStatements(){
         String code = """
@@ -475,21 +476,67 @@ public class DuplicatedCodeSnifferTest {
                         b = 1;
                         c = 2;
                     }
-                    
-                    a = 0;
-                    b = 1;
-                    c = 2;
                 }
 
                 a = 0;
                 b = 1;
                 c = 2;
-                
+
+                class Ejemplo2(){
+                    a = 0;
+                    b = 1;
+                    c = 2;
+                }
                 """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
         assertTrue(report.stinks());
-        assertEquals(2, report.getAromas().size());
+        assertEquals(3, report.getAromas().size());
+    }
+
+    @Test
+    public void test3(){
+        String code = """
+                class Ejemplo(){
+                    def metodoA(){
+                        a = 0;
+                        b = 1;
+                        c = 2;
+                    }
+                    a = 0;
+                    b = 1;
+                    c = 2;
+                    a = 0;
+                    b = 1;
+                    c = 2;   
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertFalse(report.stinks());
+    }
+
+    @Test
+    public void test4(){
+        String code = """
+                class Ejemplo(){
+                    def metodoA(){
+                        a = 0;
+                        b = 1;
+                        c = 2;
+                    }
+                }
+                
+                class Ejemplo2(){
+                    a = 0;
+                    b = 1;
+                    c = 2;
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(1, report.getAromas().size());
     }
 }
 
