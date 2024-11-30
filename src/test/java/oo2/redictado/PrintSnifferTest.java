@@ -27,22 +27,22 @@ public class PrintSnifferTest {
     @Test
     public void testMorePrints() {
         String code = """
-               x = 5;
+                x = 5;
 
-               if (x > 0) {
-                   print("Positive number");
-                   print("Value of x is: " + x);
-               }
+                if (x > 0) {
+                    print("Positive number");
+                    print("Value of x is: " + x);
+                }
 
-               if (x < 10) {
-                   print("x is less than 10");
-               }
+                if (x < 10) {
+                    print("x is less than 10");
+                }
 
-               for i in range(3) {
-                   print("Iteration number: " + i);
-               }
+                for i in range(3) {
+                    print("Iteration number: " + i);
+                }
 
-               print("End of the program");
+                print("End of the program");
                """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);

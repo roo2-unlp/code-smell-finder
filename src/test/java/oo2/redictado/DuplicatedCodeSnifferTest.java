@@ -389,7 +389,6 @@ public class DuplicatedCodeSnifferTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
         assertTrue(report.stinks());
-        System.out.println(report.getAromas().size());
         assertEquals(1, report.getAromas().size());
     }
 
@@ -444,5 +443,53 @@ public class DuplicatedCodeSnifferTest {
     }
 
     
+
+    @Test
+    public void test(){
+        String code = """
+                class Ejemplo(){
+                    def metodoA(){
+                        a = 0;
+                        b = 1;
+                        c = 2;
+                    }
+                    
+                    a = 0;
+                    b = 1;
+                    c = 2;
+                }
+
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(1, report.getAromas().size());
+    }
+
+    @Test
+    public void test2(){
+        String code = """
+                class Ejemplo(){
+                    def metodoA(){
+                        a = 0;
+                        b = 1;
+                        c = 2;
+                    }
+                    
+                    a = 0;
+                    b = 1;
+                    c = 2;
+                }
+
+                a = 0;
+                b = 1;
+                c = 2;
+                
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(2, report.getAromas().size());
+    }
 }
 
