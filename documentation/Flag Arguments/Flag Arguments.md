@@ -134,7 +134,7 @@ for (int i = 0; i < 10; i++) {}
 
 ---
 
-## Referencias
+## Bibliografía
 - Fowler, Martin. Refactoring: improving the design of existing code. Addison-Wesley Professional, 2018.
 
 - Martin, Robert C. Clean code: a handbook of agile software craftsmanship. Pearson Education, 2009.
