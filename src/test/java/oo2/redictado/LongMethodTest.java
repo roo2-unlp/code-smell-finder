@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import oo2.redictado.LongMethodCodeSniffer.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /* IMPORTAR SNIFFER */
 
@@ -23,40 +22,44 @@ public class LongMethodTest {
     @Test
     public void testSuperaLineasConMetodos(){
         String code = """
-        llamada.setOrigen(origen);
-        llamada.setDestino(destino);
-        llamada.setDuracion(duracion);
-        if (duracion > 100) {
-            llamada.setExtra(50);
-        } else {
-            llamada.setExtra(0);
+        def llamadas(origen, destino, duracion, tipo){
+            llamada.setOrigen(origen);
+            llamada.setDestino(destino);
+            llamada.setDuracion(duracion);
+            if (duracion > 100) {
+                llamada.setExtra(50);
+            } else {
+                llamada.setExtra(0);
+            }
+            llamada.impuestos(origen, destino);
+            llamada.calcular_costo(tipo);
+            llamada.calcular_credito();
+            llamadas.add(get_llamada());
         }
-        llamada.impuestos(origen, destino);
-        llamada.calcular_costo(tipo);
-        llamada.calcular_credito();
-        llamadas.add(get_llamada());
         """;
 
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertTrue(report.stinks()); /*no daria ningun stink por eso es false*/
+        assertTrue(report.stinks()); /*daria stink por eso es true*/
     }
 
     @Test
     public void testSuperaLineasSinMetodos(){
         String code = 
             """
-            resultado + alfajor.precio; 
-            resultado + cocacola.precio;
-            resultado + galletitas.precio; 
-            resultado + barradecereal.precio;
-            resultado + medialuna.precio; 
-            resultado + cereales.precio;
-            resultado + gomitas.precio;
-            resultado + saladix.precio;
-            resultado + chicle.precio;
-            resultado + mentos.precio; 
-            resultado + oblea.precio;
+            def resultado(){
+                resultado + alfajor.precio; 
+                resultado + cocacola.precio;
+                resultado + galletitas.precio; 
+                resultado + barradecereal.precio;
+                resultado + medialuna.precio; 
+                resultado + cereales.precio;
+                resultado + gomitas.precio;
+                resultado + saladix.precio;
+                resultado + chicle.precio;
+                resultado + mentos.precio; 
+                resultado + oblea.precio;
+            }
             """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -68,6 +71,7 @@ public class LongMethodTest {
 
         String code = 
         """
+        def algo(vehiculo1, vehiculo2){
             if ((vehiculo1.getPeso() > vehiculo2.getPeso() and vehiculo1.getTamanio() > vehiculo2.getTamanio)
                 and (vehiculo1.getVelocidadPromedio() < vehiculo2.getVelocidadPromedio())){
                 return true;
@@ -82,6 +86,7 @@ public class LongMethodTest {
             }
             
             return false;
+        }
         """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -89,7 +94,7 @@ public class LongMethodTest {
     }
 
     @Test
-    public void testAsignaciones(){
+    public void testNoEsMetodo(){
 
         String code = """
         monitor1 = 20000;
@@ -107,7 +112,7 @@ public class LongMethodTest {
 
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertTrue(report.stinks()); /*daria stink por eso es true*/
+        assertFalse(report.stinks()); /*no daria stink porque no esta dentro de un metodo, por eso es false*/
     }
 
     @Test

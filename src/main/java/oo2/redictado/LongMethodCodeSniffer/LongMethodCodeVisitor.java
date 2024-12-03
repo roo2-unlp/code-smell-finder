@@ -22,22 +22,34 @@ public class LongMethodCodeVisitor extends BythonParserBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitStatement(BythonParser.StatementContext ctx) { 
-        String texto = ctx.getText().trim();
-        if (!texto.matches("^\\s*def\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*\\(.*\\)\\s*:\\s*$")){
-            lineasValidas++;
-            caracteresValidos += texto.length();
-            if (lineasValidas > maxLineasPermitidas || caracteresValidos > maxCaracteresPermitidos) {
-                report.addAroma(new Aroma(callerName,"el metodo excede la cantidad de lineas o caracteres por lo cual es un metodo largo",true));
-                return null; //corto la ejecucion en el nodo actual una vez que se que hay mal olor
-            }    
-        }
-        else{
-            return visitStatement(ctx) //nose que parametro pasarle para que se empiece a recorrer el metodo que esta adentro del primer metodo 
-        }
-        return visitChildren(ctx); 
+    public Void visitFunctionDecl(BythonParser.FunctionDeclContext ctx) { 
+    // Reiniciar contadores para cada método
+    lineasValidas = 0;
+    caracteresValidos = 0;
+
+    // Visitar el contenido del método
+    visitChildren(ctx);
+
+    // Después de visitar, verificar si excede límites
+    if (lineasValidas > maxLineasPermitidas || caracteresValidos > maxCaracteresPermitidos) {
+        report.addAroma(new Aroma(
+            callerName, 
+            "El método excede la cantidad de líneas o caracteres permitidos.",
+            true
+        ));
     }
 
+    return null; // Terminar esta visita
+}
 
+@Override
+public Void visitStatement(BythonParser.StatementContext ctx) { 
+    String texto = ctx.getText().trim();
 
+    // Contar líneas y caracteres
+    lineasValidas++;
+    caracteresValidos += texto.length();
+
+    return visitChildren(ctx); 
+}
 }
