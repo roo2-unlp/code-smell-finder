@@ -20,7 +20,7 @@ public class LongMethodTest {
     }
 
     @Test
-    public void testSuperaLineasConMetodos(){
+    public void testSuperaLineasYCaracteres(){
         String code = """
         def llamadas(origen, destino, duracion, tipo){
             llamada.setOrigen(origen);
@@ -40,30 +40,30 @@ public class LongMethodTest {
 
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertTrue(report.stinks()); /*daria stink por eso es true*/
+        assertTrue(report.stinks()); /*daria stink porque excede los caracteres y lineas permitidos*/
     }
 
     @Test
-    public void testSuperaLineasSinMetodos(){
+    public void testSuperaLineas(){
         String code = 
             """
             def resultado(){
-                resultado + alfajor.precio; 
-                resultado + cocacola.precio;
-                resultado + galletitas.precio; 
-                resultado + barradecereal.precio;
-                resultado + medialuna.precio; 
-                resultado + cereales.precio;
-                resultado + gomitas.precio;
-                resultado + saladix.precio;
-                resultado + chicle.precio;
-                resultado + mentos.precio; 
-                resultado + oblea.precio;
+                res + alfajor.p; 
+                res + cocacola.p;
+                res + galletitas.p; 
+                res + barradecereal.p;
+                res + medialuna.p; 
+                res + cereales.p;
+                res + gomitas.p;
+                res + saladix.p;
+                res + chicle.p;
+                res + mentos.p; 
+                res + oblea.p;
             }
             """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertTrue(report.stinks()); /*daria stink por eso es true*/
+        assertTrue(report.stinks()); /*daria stink porque se excede de las lineas permitidas*/
     }
 
     @Test
@@ -90,7 +90,7 @@ public class LongMethodTest {
         """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertTrue(report.stinks()); /*daria stink por eso es true*/
+        assertTrue(report.stinks()); /*daria stink porque se excede de los caracteres maximos*/
     }
 
     @Test
@@ -129,7 +129,7 @@ public class LongMethodTest {
 
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
-        assertFalse(report.stinks()); /*no daria stink por eso es flase*/
+        assertFalse(report.stinks()); /*no daria stink alguno por eso es false*/
     }
 
 

@@ -7,7 +7,7 @@ import oo2.redictado.antlr4.BythonParserBaseVisitor;
 
 public class LongMethodCodeVisitor extends BythonParserBaseVisitor<Void> {
     private static final int maxLineasPermitidas = 10;
-    private static final int maxCaracteresPermitidos = 100;
+    private static final int maxCaracteresPermitidos = 250;
     private int lineasValidas = 0;
     private int caracteresValidos = 0;
 
