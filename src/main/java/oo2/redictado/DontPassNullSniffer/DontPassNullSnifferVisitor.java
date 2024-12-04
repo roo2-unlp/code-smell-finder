@@ -29,25 +29,7 @@ public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
         //Obtengo la lista de argumentos enviados a la funcion y la convierto en un string
 
         return this.argumentListVisitor.visit(ctx);
-        /*List<ExpressionContext> argumentVariable = ctx.expression();
-        for (ExpressionContext expression:argumentVariable) {
-            if (isPassNone(expression)) {
-                report.addAroma(new Aroma(this.callerName, "El codigo envia None.", true));
-            }
-        }*/
-       // return visitChildren(ctx);
     }
-   /* private boolean isPassNone(ExpressionContext exprCtx) {
-        if (exprCtx.assignment() != null) {
-            return checkAssignment(exprCtx.assignment());
-        } else {
-            if (exprCtx.valueExpression().getText().equals("None")) {
-                return true;
-            } else {
-                return variablesWithNone.contains((exprCtx.valueExpression().getText()));
-            }
-        }
-    }*/
 
     // Modificación en checkValueExpression para manejar variables y accesos a indices
     private boolean checkAssignment(BythonParser.AssignmentContext ctx) {
