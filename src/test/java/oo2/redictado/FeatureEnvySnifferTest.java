@@ -83,15 +83,17 @@ public class FeatureEnvySnifferTest {
                         class Orden{
                             def __init__(self, cliente){
                                 self.cliente= cliente;
+                                self.suscripcion = 0;
                                 self.total = 0;
                             
                             }
                                 
                             def calcular_descuento(self){
                                 if self.cliente.suscripcion == 'premium'{
-                                    
+                                    self.total == 1;
                                     return self.total * 0.2;
                                 }
+
                                 if self.cliente.order_history > 10{
                                     return self.total * 0.1;
                                 }
@@ -137,7 +139,8 @@ public class FeatureEnvySnifferTest {
                         class Notificacion{
                             def enviar_notificacion(self, usuario){	
                                 if "email" in usuario.contactos{
-                                    print("Enviar email a {usuario.nombre_usuario}, que tiene mail{usuario.email}");
+                                    usuario.nombre_usuario == "Juan";
+                                    mail = usuario.email;
                                 }
                                 print ("No se pudo enviar nada");
                             }    
@@ -145,6 +148,7 @@ public class FeatureEnvySnifferTest {
                         """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
+
         assertTrue(report.stinks());
     }
 
