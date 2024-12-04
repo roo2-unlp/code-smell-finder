@@ -21,7 +21,6 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
     private Set<String> instanceVariables;
     private Set<String> uniqueAccesses; // Para evitar contar duplicados
 
-
     /**
      * Constructor de FeatureEnvyVisitor.
      * @param report El reporte de aromas donde se registrarán los malos olores.
@@ -36,6 +35,11 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         this.instanceVariables = new HashSet<>();
     }
 
+    /**
+     * Visita la declaración de un método.
+     * @param ctx El contexto de la declaración del método.
+     * @return null
+     */
     @Override
     public Void visitMethodDecl(BythonParser.MethodDeclContext ctx) {
         // Revisamos si el método tiene parámetros
@@ -55,6 +59,11 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         return super.visitMethodDecl(ctx);
     }
 
+    /**
+     * Visita un miembro de clase.
+     * @param ctx El contexto del miembro de clase.
+     * @return null
+     */
     @Override
     public Void visitClassMember(BythonParser.ClassMemberContext ctx) {
         if (ctx.simpleAssignment() != null) {
@@ -65,6 +74,11 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         return visitChildren(ctx);
     }
 
+    /**
+     * Visita una expresión encadenada.
+     * @param ctx El contexto de la expresión encadenada.
+     * @return null
+     */
     @Override
     public Void visitChainedExpression(BythonParser.ChainedExpressionContext ctx) {
         StringBuilder fullAccess = new StringBuilder(ctx.chainStart().getText());
@@ -81,6 +95,11 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         return null; // No recorrer más
     }
 
+    /**
+     * Visita una asignación simple.
+     * @param ctx El contexto de la asignación simple.
+     * @return null
+     */
     @Override
     public Void visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
         String assignment = ctx.getText();  // Texto completo de la asignación
@@ -107,6 +126,10 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         return super.visitSimpleAssignment(ctx);
     }
 
+    /**
+     * Cuenta el acceso a una propiedad.
+     * @param fullAccess El acceso completo a la propiedad.
+     */
     private void contarAccesoProperty(String fullAccess) {
         String[] parts = fullAccess.split("\\.");  // Dividir el acceso por puntos
     
@@ -145,12 +168,22 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         }
     }
 
+    /**
+     * Crea un aroma si el acceso excede el límite.
+     * @param accessType El tipo de acceso.
+     * @param fullAccess El acceso completo.
+     */
     private void crearAroma(String accessType, String fullAccess) {
         // Creamos un aroma solo si el acceso excede el límite
         report.addAroma(new Aroma(this.callerName, 
             "Feature envy detected on " + accessType + ": " + fullAccess, true));
     }
 
+    /**
+     * Calcula la profundidad total de una expresión encadenada.
+     * @param ctx El contexto de la expresión encadenada.
+     * @return La profundidad total.
+     */
     public int calculateDepth(BythonParser.ChainedExpressionContext ctx) {
         // Calcula la profundidad total: número de accesos a propiedades y llamadas a métodos
         return ctx.chainedMethodCall().size() + ctx.propertyAccess().size();
