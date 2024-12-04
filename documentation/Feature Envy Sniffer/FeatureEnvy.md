@@ -106,12 +106,14 @@ Hay *feature envy* .Dependencia entre clases. La idea sería revisar los paráme
 
 ```python
 class Notificacion{
-    def enviar_notificacion(self, usuario):
-        if 'email' in usuario.contactos{
-            return f'Enviar email a {usuario.nombre_usuario}, que tiene mail{usuario.email}'  
-         }
-        return 'No se pudo enviar nada'
-}
+                            def enviar_notificacion(self, usuario){	
+                                if "email" in usuario.contactos{
+                                    usuario.nombre_usuario == "Juan";
+                                    mail = usuario.email;
+                                }
+                                print ("No se pudo enviar nada");
+                            }    
+                        }
 ```
 ### Ejemplo 5
 Dependencia entre clases. La idea sería revisar los parámetros y guardarlos, se busca que no se acceda 2 veces o más a: “parámetro”.”metodo/variable”. Si res ≤ 2, no se detecta como feature envy, siendo res la cantidad de accesos.() 

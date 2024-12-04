@@ -19,7 +19,6 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
     private final int featureEnvyLimit;
     private Map<String, Integer> attributeAccessCount;
     private Set<String> instanceVariables;
-    private Set<String> uniqueAccesses; // Para evitar contar duplicados
 
     /**
      * Constructor de FeatureEnvyVisitor.
