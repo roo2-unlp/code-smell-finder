@@ -38,10 +38,8 @@ public class SwitchStatementTest {
         CodeSniffer sniffer = new SwitchStatementSniffer();
         sniffer.sniff(code, report);
 
-        // Verificar que se detecta un mal olor
-        assertTrue(report.stinks());
 
-        // Verificar que hay exactamente un aroma en el reporte
+        assertTrue(report.stinks());
         assertEquals(1, report.getAromas().size());
 
         // Verificar que el aroma es el esperado
@@ -87,6 +85,7 @@ public class SwitchStatementTest {
         // Ejecutar el sniffing en el código
         sniffer.sniff(code, report);
         assertFalse(report.stinks());
+        assertEquals(0, report.getAromas().size());
     }
 
     // -------------------------------------------------------------------------------------
@@ -144,6 +143,7 @@ public class SwitchStatementTest {
         sniffer.sniff(code, report);
 
         assertFalse(report.stinks()); // No debería oler mal
+        assertEquals(0, report.getAromas().size());
     }
 
     //-------------------------------------------------
@@ -151,33 +151,90 @@ public class SwitchStatementTest {
     @Test
     public void testCalcularImpuestoBadSmell() {
         String code = """
-            def calcular_impuesto_bad_smell(categoria_producto, precio){
-                if categoria_producto == "alimento"{
-                    return precio * 0.05;}
-                elif categoria_producto == "ropa"{
-                    return precio * 0.1;}
-                elif categoria_producto == "electrónica"{
-                    return precio * 0.15;}
-                elif categoria_producto == "muebles"{
-                    return precio * 0.12;}
-                else{
-                    return "Categoría de producto inválida";}
-            }
+                def calcular_impuesto_bad_smell(categoria_producto, precio){
+                      if categoria_producto == "alimento"{
+                          return precio * 0.05;}
+                      elif categoria_producto == "ropa"{
+                          return precio * 0.1;}
+                      elif categoria_producto == "electrónica"{
+                          return precio * 0.15;}
+                      elif categoria_producto == "muebles"{
+                          return precio * 0.12;}
+                      else{
+                          return "Categoría de producto inválida";}
+                  }
             """;
 
         AromaReport report = new AromaReport(code);
         CodeSniffer sniffer = new SwitchStatementSniffer(); // Suponiendo que SwitchStatementSniffer implementa CodeSniffer
 
-        // Ejecutar el sniffing en el código
+
         sniffer.sniff(code, report);
-
-
-        // Verifica que el código tiene un bad smell
         assertTrue(report.stinks(), "El código tiene un bad smell (switch statement smell).");
-
-        // Verifica que se detectaron aromas
         assertEquals(1, report.getAromas().size(), "El número de aromas debe ser 1.");
     }
+
+    @Test
+    public void testSwitchStatementSmellDetected_3() {
+        // Código con múltiples if-elif (Bad Smell)
+        String code = """
+        class Restaurante{
+                     def calcular_precio(plato){
+                         if plato == "Pizza"{
+                             print(10);}
+                         elif plato == "Hamburguesa"{
+                             print(8);}
+                         elif plato == "Pasta"{
+                             print(12);}
+                         elif plato == "Ensalada"{
+                             print(6);}
+                         else{
+                             print("Plato no disponible");}
+                     }
+        }
+    
+    """;
+
+        AromaReport report = new AromaReport(code);
+        CodeSniffer sniffer = new SwitchStatementSniffer();
+        sniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(1, report.getAromas().size());
+
+    }
+
+    @Test
+    public void testNoSwitchStatementSmellDetected() {
+
+        String code = """
+                 if edad >= 18{
+                     print ("Eres mayor de edad");
+                 }else{
+                     print ("Eres menor de edad");
+                }
+    """;
+
+
+
+        AromaReport report = new AromaReport(code);
+        CodeSniffer sniffer = new SwitchStatementSniffer();
+        sniffer.sniff(code, report);
+        assertFalse(report.stinks());
+        assertEquals(0, report.getAromas().size());
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

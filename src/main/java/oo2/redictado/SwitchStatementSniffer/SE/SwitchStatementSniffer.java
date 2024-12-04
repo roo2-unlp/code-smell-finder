@@ -30,9 +30,9 @@ public class SwitchStatementSniffer implements CodeSniffer {
         visitor.visit(tree);
 
         // Si no hay malos olores, añade un mensaje indicando que el código está limpio
-        if (!report.stinks()) {
-            report.addAroma(new Aroma("SwitchStatementSniffer", "The code smells good.", false));
-        }
+        //if (!report.stinks()) {
+         //   report.addAroma(new Aroma("SwitchStatementSniffer", "The code smells good.", false));
+       // }
     }
 }
 
