@@ -94,37 +94,7 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         return null; // No recorrer más
     }
 
-    /**
-     * Visita una asignación simple.
-     * @param ctx El contexto de la asignación simple.
-     * @return null
-     */
-    @Override
-    public Void visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
-        String assignment = ctx.getText();  // Texto completo de la asignación
-
-        if (assignment.startsWith("self.")) {
-            String varName = assignment.split("\\.")[1].split("=")[0]; // Extraemos el nombre de la variable
-            instanceVariables.add(varName);
-            System.out.println("Variable de instancia registrada: " + varName);
-
-            // Contamos el acceso (tanto para asignaciones como para comparaciones)
-            contarAccesoProperty("self." + varName); // Aseguramos que se cuente cuando haya una asignación
-        }
-
-        // Ahora también contamos los accesos a parámetros dentro de las asignaciones
-        if (assignment.contains("=")) {
-            // Esto asegura que cuando asignamos algo a un parámetro, se registre el acceso a la propiedad
-            String[] parts = assignment.split("=");
-            String lhs = parts[0].trim(); // Left side (donde estamos haciendo la asignación)
-            if (lhs.startsWith("usuario")) {
-                contarAccesoProperty(lhs);  // Contamos también el acceso a 'usuario'
-            }
-        }
-
-        return super.visitSimpleAssignment(ctx);
-    }
-
+    
     /**
      * Cuenta el acceso a una propiedad.
      * @param fullAccess El acceso completo a la propiedad.
