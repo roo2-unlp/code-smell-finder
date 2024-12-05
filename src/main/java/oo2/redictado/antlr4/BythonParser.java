@@ -3196,7 +3196,6 @@ public class BythonParser extends Parser {
 			{
 			setState(500); match(DOT);
 			setState(501); methodCall();
-			
 			}
 		}
 		catch (RecognitionException re) {

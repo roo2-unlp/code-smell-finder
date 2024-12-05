@@ -41,18 +41,14 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
      */
     @Override
     public Void visitMethodDecl(BythonParser.MethodDeclContext ctx) {
-        // Revisamos si el método tiene parámetros
         if (ctx.methodParamList() != null) {
-            // Accedemos a los parámetros a través de `methodParamList()`
             MethodParamListContext paramListContext = ctx.methodParamList();
 
-            // Iteramos sobre los parámetros y los registramos
             for (int i = 0; i < paramListContext.ID().size(); i++) {
-                String paramName = paramListContext.ID(i).getText();  // Extraemos el nombre del parámetro
+                String paramName = paramListContext.ID(i).getText();  
                 System.out.println("Parámetro encontrado: " + paramName);
 
-                // Inicializamos el contador para el parámetro
-                attributeAccessCount.put(paramName, 0);  // Comenzamos con 0 accesos
+                attributeAccessCount.put(paramName, 0);  
             }
         }
         return super.visitMethodDecl(ctx);
@@ -66,7 +62,7 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
     @Override
     public Void visitClassMember(BythonParser.ClassMemberContext ctx) {
         if (ctx.simpleAssignment() != null) {
-            String varName = ctx.simpleAssignment().ID().getText(); // Nombre de la variable
+            String varName = ctx.simpleAssignment().ID().getText(); 
             instanceVariables.add(varName);
             System.out.println("Variable de instancia registrada: " + varName);
         }
@@ -85,13 +81,13 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
 
         for (ParseTree child : ctx.children) {
             if (child instanceof BythonParser.PropertyAccessContext || child instanceof BythonParser.ChainedMethodCallContext) {
-                fullAccess.append(child.getText()); // Construir acceso completo
+                fullAccess.append(child.getText()); 
             }
         }
 
         System.out.println("Acceso completo construido: " + fullAccess);
-        contarAccesoProperty(fullAccess.toString()); // Procesar cualquier acceso (tanto lectura como escritura)
-        return null; // No recorrer más
+        contarAccesoProperty(fullAccess.toString()); 
+        return null; 
     }
 
     
@@ -100,37 +96,27 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
      * @param fullAccess El acceso completo a la propiedad.
      */
     private void contarAccesoProperty(String fullAccess) {
-        String[] parts = fullAccess.split("\\.");  // Dividir el acceso por puntos
+        String[] parts = fullAccess.split("\\."); 
     
-        // Verificamos si el acceso es a una propiedad encadenada de instancia (es decir, tiene más de un punto y empieza con `self`)
         if (parts.length > 2 && parts[0].equals("self")) {
-            String firstLevelVar = parts[1];  // Es una propiedad de instancia de un objeto
+            String firstLevelVar = parts[1];  
     
-            // Incrementar el contador de acceso a la propiedad (solo para propiedades encadenadas)
             int newCount = attributeAccessCount.getOrDefault(firstLevelVar, 0) + 1;
             attributeAccessCount.put(firstLevelVar, newCount);
-            System.out.println("Acceso contado a propiedad encadenada de instancia: " + firstLevelVar + " -> " + newCount);
     
-            // Detectar si el acceso excede el límite
             if (newCount > featureEnvyLimit) {
                 crearAroma(firstLevelVar, fullAccess);
             }
         } 
-        // Si el acceso es directo a `self` (como `self.total`), NO lo contamos
-        else if (parts.length == 1 && parts[0].equals("self")) {
-            System.out.println("Acceso directo a `self` no contado: " + fullAccess);
-        }
 
-        // Si el acceso es a un parámetro (como `usuario.email`), lo contamos si tiene más de un punto
+       
+
         else if (parts.length > 1 && !parts[0].equals("self")) {
-            String paramName = parts[0];  // Es un parámetro
+            String paramName = parts[0];  
     
-            // Incrementamos el contador de acceso al parámetro
             int newCount = attributeAccessCount.getOrDefault(paramName, 0) + 1;
             attributeAccessCount.put(paramName, newCount);
-            System.out.println("Acceso contado a parámetro: " + paramName + " -> " + newCount);
     
-            // Detectar si el número de accesos al parámetro excede el límite
             if (newCount > featureEnvyLimit) {
                 crearAroma(paramName, fullAccess);
             }
@@ -143,7 +129,6 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
      * @param fullAccess El acceso completo.
      */
     private void crearAroma(String accessType, String fullAccess) {
-        // Creamos un aroma solo si el acceso excede el límite
         report.addAroma(new Aroma(this.callerName, 
             "Feature envy detected on " + accessType + ": " + fullAccess, true));
     }
@@ -154,7 +139,6 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
      * @return La profundidad total.
      */
     public int calculateDepth(BythonParser.ChainedExpressionContext ctx) {
-        // Calcula la profundidad total: número de accesos a propiedades y llamadas a métodos
         return ctx.chainedMethodCall().size() + ctx.propertyAccess().size();
     }
 }

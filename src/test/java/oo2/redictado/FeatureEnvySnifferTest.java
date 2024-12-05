@@ -186,4 +186,18 @@ public class FeatureEnvySnifferTest {
         assertFalse(report.stinks());
     }
 
+     @Test void testGlobalCode(){
+        String code = """
+                        auto.motor.temperatura;
+                        auto.radio.marca == "Lenovo";
+                        auto.marca.nombre == "Honda";
+
+
+                        """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertFalse(report.stinks());
+    }
+    
+
 }
