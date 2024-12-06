@@ -32,12 +32,12 @@ public class DuplicatedCodeSniffer implements CodeSniffer{
         
 
         // Visits the parse tree to check for bad smells
-        DuplicatedCodeStorageVisitor visitor = new DuplicatedCodeStorageVisitor(report, "DuplicatedCodeSniffer");
+        DuplicatedCodeVisitor visitor = new DuplicatedCodeVisitor(report);
         
         // guardo todos los datos
         visitor.visit(tree);
         // comparo los datos
-        visitor.analyze();
+       // visitor.analyze();
         
         if (!report.stinks()) {
             report.addAroma(new Aroma("DuplicatedCodeSniffer", "The code smells good", false));
