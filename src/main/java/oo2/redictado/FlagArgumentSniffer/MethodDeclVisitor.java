@@ -115,7 +115,6 @@ public class MethodDeclVisitor extends BythonParserBaseVisitor<Void> {
         if (containsParameter) {
 	    	report.addAroma(new Aroma(this.methodName, "The function " + this.methodName + " in " + this.callerName + " uses flag arguments.", true));
 	    }
-        System.out.println(this.ExpressionVarList);
         return visitChildren(ifStmt);
     }
    
