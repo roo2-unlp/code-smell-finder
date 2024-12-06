@@ -7,7 +7,7 @@ import oo2.redictado.AromaReport;
 import oo2.redictado.antlr4.BythonParser;
 import oo2.redictado.antlr4.BythonParserBaseVisitor;
 
-public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
+public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Boolean> {
 	private AromaReport report;
     private String callerName;
     private List<String> variablesWithNone;
@@ -22,12 +22,12 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
     }
 
     @Override
-    public Void visitReturnStatement(BythonParser.ReturnStatementContext ctx) {
+    public Boolean visitReturnStatement(BythonParser.ReturnStatementContext ctx) {
         return visitor.visit(ctx.expression());
     }
 
     @Override
-    public Void visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
+    public Boolean visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
         String variableName = ctx.ID().getText();
         String assignedValue = ctx.expression().getText();
 
@@ -45,7 +45,7 @@ public class DontReturnNullSnifferVisitor extends BythonParserBaseVisitor<Void> 
     }
 
     @Override
-    public Void visitIndexAssignment(BythonParser.IndexAssignmentContext ctx) {
+    public Boolean visitIndexAssignment(BythonParser.IndexAssignmentContext ctx) {
         String indexName = ctx.indexAccess().getText();
         String assignedValue = ctx.expression().getText();
 

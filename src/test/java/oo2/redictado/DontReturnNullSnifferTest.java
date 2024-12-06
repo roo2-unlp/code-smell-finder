@@ -184,5 +184,19 @@ public class DontReturnNullSnifferTest {
         assertFalse(report.stinks());
     }
     // test de una funcion sin return. No devuelve mal olor ya que no hay nada que devolver
+
+    @Test
+    public void testReturnImplicitAssignment() {
+        String code = """
+            def ejemplo5(){
+                a = 500;
+                return a += None;
+            }
+            """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        assertFalse(report.stinks());
+    }
 }
         

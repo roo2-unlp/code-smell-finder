@@ -7,7 +7,7 @@ import oo2.redictado.antlr4.BythonParserBaseVisitor;
 
 import java.util.List;
 
-public class ExpressionVisitor extends BythonParserBaseVisitor<Void> {
+public class ExpressionVisitor extends BythonParserBaseVisitor<Boolean> {
     private AromaReport report;
     private String callerName;
     private List<String> variablesWithNone;
@@ -21,7 +21,7 @@ public class ExpressionVisitor extends BythonParserBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitExpression(BythonParser.ExpressionContext ctx){
+    public Boolean visitExpression(BythonParser.ExpressionContext ctx){
         // Verifica si la expresión devuelve `None` o una variable/índice con `None`
         if (isReturningNone(ctx)) {
             report.addAroma(new Aroma(callerName, "El código devuelve None.", true));
@@ -33,5 +33,25 @@ public class ExpressionVisitor extends BythonParserBaseVisitor<Void> {
         return ctx.getText().equals("None") || this.variablesWithNone.contains(ctx.getText());
     }
 
+    @Override
+    public Boolean visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
+        if (ctx.expression().getText().equals("None")) {
+            report.addAroma(new Aroma(callerName, "El código devuelve None.", true));
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Boolean visitIndexAssignment(BythonParser.IndexAssignmentContext ctx) {
+        if (ctx.expression().getText().equals("None")) {
+            report.addAroma(new Aroma(callerName, "El código devuelve None.", true));
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Boolean visitImplicitAssignment (BythonParser.ImplicitAssignmentContext ctx) {
+        return true;
+    }
 
 }
