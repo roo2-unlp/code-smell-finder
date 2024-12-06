@@ -10,7 +10,7 @@ import oo2.redictado.antlr4.BythonParser;
 import oo2.redictado.antlr4.BythonParser.ExpressionContext;
 import oo2.redictado.antlr4.BythonParserBaseVisitor;
 
-public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
+public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Boolean> {
     private AromaReport report;
     private String callerName;
     private List<String> variablesWithNone;
@@ -25,30 +25,14 @@ public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitArgumentList(BythonParser.ArgumentListContext ctx) {
+    public Boolean visitArgumentList(BythonParser.ArgumentListContext ctx) {
         //Obtengo la lista de argumentos enviados a la funcion y la convierto en un string
 
         return this.argumentListVisitor.visit(ctx);
     }
 
-    // Modificación en checkValueExpression para manejar variables y accesos a indices
-    private boolean checkAssignment(BythonParser.AssignmentContext ctx) {
-        if (ctx.simpleAssignment() != null) {
-            visitSimpleAssignment(ctx.simpleAssignment());
-            return this.variablesWithNone.contains(ctx.simpleAssignment().ID().getText());
-        }
-
-        if (ctx.indexAssignment() != null) {
-            visitIndexAssignment(ctx.indexAssignment());
-            return this.variablesWithNone.contains(ctx.indexAssignment().indexAccess().getText());
-        }
-
-        return false;
-    }
-
-
     @Override
-    public Void visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
+    public Boolean visitSimpleAssignment(BythonParser.SimpleAssignmentContext ctx) {
         String variableName = ctx.ID().getText(); // Obtengo el nombre de la variable
         String assignedValue = ctx.expression().getText(); // Obtengo la expresión asignada
         if ("None".equals(assignedValue)) {
@@ -62,7 +46,7 @@ public class DontPassNullSnifferVisitor extends BythonParserBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitIndexAssignment(BythonParser.IndexAssignmentContext ctx) {
+    public Boolean visitIndexAssignment(BythonParser.IndexAssignmentContext ctx) {
         String variableName=ctx.indexAccess().getText();
         String assignedValue=ctx.expression().getText();
         if ("None".equals(assignedValue)) {
