@@ -14,14 +14,16 @@ public class FlagArgumentVisitor extends BythonParserBaseVisitor<Void> {
         this.callerName = callerName;
     }
 
+    @Override
     /**
-     * Visita cada declaración de método en el árbol y utiliza `visitFunctionDecl`
-     * para analizar los parámetros e instrucciones `if` y ´elif´ dentro del método.
+     * Visita cada declaración de función en el árbol del parser.
+     * 
+     * Este método se encarga de crear un visitor especializado (`MethodDeclVisitor`) 
+     * para analizar los parámetros y las estructuras internas (If y Elif) del método.
      *
-     * @param ctx Contexto del método en el árbol del parser.
+     * @param ctx Contexto de la declaración de la función del parser.
      * @return Siempre devuelve `null`.
      */
-    @Override
     public Void visitFunctionDecl(BythonParser.FunctionDeclContext ctx) {
         String methodName = ctx.ID().getText();
 

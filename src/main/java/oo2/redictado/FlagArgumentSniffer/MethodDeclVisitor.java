@@ -28,11 +28,14 @@ public class MethodDeclVisitor extends BythonParserBaseVisitor<Void> {
     }
     
     /**
-     * Obtiene y almacena los parámetros declarados en el método.
+     * Obtiene los parámetros declarados en el método y los almacena en la lista parametersList.
      *
-     * @param ctx Contexto de la lista de identificadores del parser.
-     * @return Siempre devuelve `null`.
-     */
+     * Este método se ejecuta al visitar una lista de identificadores (parámetros)
+	 * y asegura que los parámetros declarados se registren para su posterior análisis.
+	 *
+	 * @param ctx Contexto de la lista de identificadores del parser.
+	 * @return Siempre devuelve `null`.
+	 */
     @Override
     public Void visitIdentifierList(BythonParser.IdentifierListContext ctx) {
         ctx.ID().forEach(param -> this.parametersList.add(param));
@@ -40,10 +43,12 @@ public class MethodDeclVisitor extends BythonParserBaseVisitor<Void> {
     }
     
     /**
-     * Procesa una expresión de tipo `ValueExpressionContext` y todas sus subexpresiones.
-     * Agrega cada subexpresión encontrada a la lista `ExpressionVarList`.
+     * Procesa una expresión y todas sus subexpresiones recursivamente.
      *
-     * @param valueExpr Contexto de la expresión del parser.
+     * Este método agrega cada subexpresión encontrada al `ExpressionVarList`
+     * para permitir su análisis posterior.
+     *
+     * @param valueExpr Contexto de una expresión del parser.
      */
     private void processValueExpression(BythonParser.ValueExpressionContext valueExpr) {
     	valueExpr.valueExpression().stream()
@@ -54,9 +59,12 @@ public class MethodDeclVisitor extends BythonParserBaseVisitor<Void> {
     }
     
     /**
-     * Procesa las expresiones dentro de las cláusulas `if` y `elif`.
+     * Procesa las expresiones dentro de las cláusulas `if` y `elif` del método.
      *
-     * @param ifStmt Contexto de la cláusula `if`.
+     * Este método utiliza `processValueExpression` para registrar todas las expresiones
+     * en las cláusulas condicionales en la lista `ExpressionVarList`.
+     *
+     * @param ifStmt Contexto de una cláusula `if` del parser.
      */
     private void getIfExpressions(BythonParser.IfStatementContext ifStmt) {
         if (ifStmt.valueExpression() != null) {
@@ -73,11 +81,13 @@ public class MethodDeclVisitor extends BythonParserBaseVisitor<Void> {
     
     
     /**
-     * Verifica si alguna expresión en `ExpressionVarList` coincide con los parámetros definidos
-     * en la lista `parametersList`.
+     * Verifica si alguna expresión registrada coincide con los parámetros del método.
      *
-     * @param ifStmt Contexto de la cláusula `if` del parser.
-     * @return `true` si alguna expresión coincide con un parámetro; `false` en caso contrario.
+     * Este método utiliza las listas `ExpressionVarList` y `parametersList` para identificar
+     * si alguna expresión depende directamente de un parámetro, lo que puede indicar
+     * un posible uso de flag arguments.
+     *
+     * @return `true` si se detecta un parámetro como flag argument; `false` en caso contrario.
      */
     private boolean containsParameter() {
         return this.ExpressionVarList.stream()
@@ -89,9 +99,13 @@ public class MethodDeclVisitor extends BythonParserBaseVisitor<Void> {
 
     
     /**
-     * Analiza las declaraciones `if` y ´elif´ en el método y extrae expresiones.
+     * Analiza las cláusulas `if` dentro del método.
      *
-     * @param ifStmt Contexto del `if` en el árbol del parser.
+     * Este método extrae las expresiones de las cláusulas `if` y `elif` y verifica si
+     * algún flag argument está siendo utilizado. Si se detecta un flag argument, registra
+     * un bad smell en el reporte `AromaReport`.
+     *
+     * @param ifStmt Contexto de una cláusula `if` del parser.
      * @return Siempre devuelve `null`.
      */
     @Override
@@ -101,6 +115,7 @@ public class MethodDeclVisitor extends BythonParserBaseVisitor<Void> {
         if (containsParameter) {
 	    	report.addAroma(new Aroma(this.methodName, "The function " + this.methodName + " in " + this.callerName + " uses flag arguments.", true));
 	    }
+        System.out.println(this.ExpressionVarList);
         return visitChildren(ifStmt);
     }
    
