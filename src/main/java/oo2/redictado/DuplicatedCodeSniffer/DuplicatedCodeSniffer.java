@@ -11,38 +11,40 @@ import oo2.redictado.CodeSniffer;
 import oo2.redictado.antlr4.BythonLexer;
 import oo2.redictado.antlr4.BythonParser;
 
-public class DuplicatedCodeSniffer implements CodeSniffer{
+/**
+ * Clase que implementa la interfaz {@link CodeSniffer} para detectar código duplicado
+ * en un fragmento de código fuente escrito en el lenguaje Bython.
+ * Utiliza ANTLR para analizar el código y busca bloques de código duplicado.
+ */
+public class DuplicatedCodeSniffer implements CodeSniffer {
 
+    /**
+     * Analiza el código fuente en busca de bloques, codigo plano y asignaciones duplicadas y genera un reporte de aromas.
+     * Si se detecta código duplicado, se registra un aroma en el reporte.
+     * Si no se encuentra duplicado, se añade un aroma indicando que el código no tiene problemas.
+     *
+     * @param code el código fuente a analizar, representado como una cadena de texto.
+     * @param report el reporte donde se añadirán los aromas detectados.
+     * @throws IllegalArgumentException si el código contiene errores de sintaxis.
+     */
+    @Override
     public void sniff(String code, AromaReport report) {
-        // Creates Bython Parser
         CharStream stream = CharStreams.fromString(code);
         BythonLexer lexer = new BythonLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         BythonParser parser = new BythonParser(tokens);
-        
-        // Parses the code and checks for syntax errors
+
         ParseTree tree = parser.program();
-        
-        /* 
-        System.out.println(parser.getNumberOfSyntaxErrors());
+
         if (parser.getNumberOfSyntaxErrors() > 0) {
             throw new IllegalArgumentException("Syntax error");
         }
-        */
-        
 
-        // Visits the parse tree to check for bad smells
-        DuplicatedCodeVisitor visitor = new DuplicatedCodeVisitor(report);
-        
-        // guardo todos los datos
+        DuplicatedCodeVisitor visitor = new DuplicatedCodeVisitor(report, "DuplicatedCodeSniffer");
         visitor.visit(tree);
-        // comparo los datos
-       // visitor.analyze();
-        
+
         if (!report.stinks()) {
-            report.addAroma(new Aroma("DuplicatedCodeSniffer", "The code smells good", false));
+            report.addAroma(new Aroma("DuplicatedCodeSniffer", "El código está bien", false));
         }
-        
     }
-    
 }

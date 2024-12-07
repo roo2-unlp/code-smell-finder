@@ -9,13 +9,50 @@ import oo2.redictado.DuplicatedCodeSniffer.DuplicatedCodeSniffer;
 public class DuplicatedCodeSnifferTest {
     DuplicatedCodeSniffer codeSniffer;
 
-
     @BeforeEach
     public void setUp() {
         codeSniffer = new DuplicatedCodeSniffer();
     } 
 
-    
+    @Test
+    public void testOneMethod(){
+        String code = """
+                class Ejemplo() {  
+                    def metodoA() {  
+                        print(1);  
+                        print(2);  
+                        print(3);  
+                    }  
+                }  
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertFalse(report.stinks());
+    }
+
+    @Test
+    public void testNoDuplicatedMethod() {
+        String code = """
+                class Ejemplo() {  
+                    def metodoA() {  
+                        x = 1;  
+                        print(x);  
+                        y = 2;
+                        print(y);  
+                    }  
+
+                    def metodoB() {  
+                        print(1);  
+                        print(2);  
+                        print(3);  
+                    }  
+                }   
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertFalse(report.stinks());
+    }
+
     @Test
     public void testDuplicateMethod() {
         String code = """
@@ -39,93 +76,8 @@ public class DuplicatedCodeSnifferTest {
         assertEquals(1, report.getAromas().size());
     }
 
-     
-
     @Test
-    public void testMoreOfOneDuplicateMethod() {
-        String code = """
-                class Ejemplo() {  
-                    def metodoA() {  
-                        print(1);  
-                        print(2);  
-                        print(3);  
-                    }  
-
-                    def metodoB() {  
-                        print(1);  
-                        print(2);  
-                        print(3);  
-                    }  
-
-                    def metodoC() {  
-                        print(1);  
-                        print(2);  
-                        print(3);  
-                    }  
-
-                    def metodoD() {  
-                        print(1);  
-                        print(2);  
-                        print(3);  
-                    }  
-                }  
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-        assertEquals(3, report.getAromas().size());
-    }
-
-    @Test
-    public void testNoDuplicatedCode() {
-        String code = """
-                class Ejemplo() {  
-                    def metodoA() {  
-                        x = 1;  
-                        print(x);  
-                        y = 2;
-                        print(y);  
-                    }  
-
-                    def metodoB() {  
-                        print(1);  
-                        print(2);  
-                        print(3);  
-                    }  
-                }   
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
-    }
-
-    @Test
-    public void testDuplicateConstructor() {
-        String code = """
-                class persona() {  
-                    def __init__(self, nombre, apellido, edad) {  
-                        self.nombre = "Lautaro";  
-                        self.apellido = "Gubia";  
-                        self.edad = 20;  
-                    }  
-                }  
-
-                class alumno() {  
-                    def __init__(self, nombre, apellido, edad) {  
-                        self.nombre = "Lautaro";  
-                        self.apellido = "Gubia";  
-                        self.edad = 20;  
-                    }  
-                }  
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size());
-    }
-
-    @Test//quizas no
-    public void testDuplicateMethodWithControlStatements(){
+    public void testDuplicatedMethodWithControlStatements(){
         String code = """
                 class Ejemplo() {  
                     def metodoA(a, b) {  
@@ -150,254 +102,9 @@ public class DuplicatedCodeSnifferTest {
         assertTrue(report.stinks());
         assertEquals(1, report.getAromas().size());
     }
-    
-    @Test//quizas no
-    public void testMoreOfOneDuplicateMethodWithControlStatements() {
-        System.out.println("TEST QUE ME INTERESA");
-        String code = """
-                class Ejemplo() {  
-                    def metodoA(a, b) {  
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print(2);  
-                        } 
-                    }  
-
-                    def metodoB(a, b) {  
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print(2);  
-                        } 
-                    } 
-                        
-                    def metodoC(a, b) {  
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print(2);  
-                        } 
-                    }
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        System.out.println("como chilla ella");
-        assertTrue(report.stinks());
-        assertEquals(2, report.getAromas().size()); 
-    }
 
     @Test
-    public void testNoDuplicatedCodeMethodsWithControlStatements() {
-        String code = """
-                class Ejemplo() {  
-                    def metodoA(a, b) {  
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print(2);  
-                        } 
-                    }  
-
-                    def metodoB(a, b) {  
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print("No son iguales");  
-                        } 
-                    }  
-                }  
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        System.out.println("cantidad"+ report.getAromas().size());
-        assertFalse(report.stinks());
-    }
-
-    @Test//quizas no
-    public void testDuplicatedCodeMethodInsideAndOutsideClass(){
-        String code = """
-                class Ejemplo() { 
-                    def metodoA(){
-                        print(1);
-                        print(2);
-                        print(3);
-                    }
-                }
-
-                def metodoB(){
-                    print(1);
-                    print(2);
-                    print(3);
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size());
-    }
-
-    @Test//quizas no
-    public void testMoreOfOneDuplicateMethodInsideAndOutsideClass() {
-        String code = """
-                class Ejemplo() { 
-                    def metodoA(){
-                        print(1);
-                        print(2);
-                        print(3);
-                    }
-
-                    def metodoB(){
-                        print(1);
-                        print(2);
-                        print(3);
-                    }
-                }
-
-                def metodoC(){
-                    print(1);
-                    print(2);
-                    print(3);
-                }
-
-                def metodoD(){
-                    print(1);
-                    print(2);
-                    print(3);
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-        assertEquals(3, report.getAromas().size());
-    }
-
-    @Test
-    public void testDuplicatedCodeMethodInsideAndOutsideClassWithControlStatements(){
-        String code = """
-                class Ejemplo() { 
-                    def metodoA(){
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print(2);  
-                        } 
-                    }
-                }
-
-                def metodoB(){
-                    if (a == b) {  
-                        print(1);  
-                    } else {  
-                        print(2);  
-                    } 
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size());
-    }
-
-    @Test
-    public void testMoreOfOneDuplicateMethodInsideAndOutsideClassWithControlStatements() {
-        String code = """
-                class Ejemplo() { 
-                    def metodoA(){
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print(2);  
-                        } 
-                    }
-
-                    def metodoB(){
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print(2);  
-                        } 
-                    }
-                }
-
-                def metodoC(){
-                    if (a == b) {  
-                        print(1);  
-                    } else {  
-                        print(2);  
-                    } 
-                }
-
-                def metodoD(){
-                    if (a == b) {  
-                        print(1);  
-                    } else {  
-                        print(2);  
-                    } 
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-        assertEquals(3, report.getAromas().size());
-    }
-
-    @Test
-    public void testNoDuplicatedCodeMethodsWithNestedControlStatements(){
-        String code = """
-                class Ejemplo() { 
-                    def metodoA(number){
-                        for i in range(3){
-                            if (a == b) {  
-                                print(1);  
-                            } else {  
-                                print(2);  
-                            } 
-                        }
-                    }
-
-                    def metodoB(){
-                        for i in range(3){
-                            if (a == b) {  
-                                print(1);  
-                            } else {  
-                                print(2);  
-                            } 
-                        }
-                    }
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size());
-    }
-
-    
-
-    @Test//quizas no
-    public void testDuplicateMethodWithScript(){
-        String code = """
-                def metodoA(){
-                    print(1);
-                    print(2);
-                    print(3);
-                }
-
-                print(1);
-                print(2);
-                print(3);
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertTrue(report.stinks());
-        assertEquals(1, report.getAromas().size());
-    }
-
-    
-    @Test//quizas no
-    public void testDuplicateMethodWithScriptAndControlStatements(){
+    public void testDuplicatedMethodWithFlatCodeAndControlStatements(){
         String code = """
                 def metodoA(){
                     if (a == b) {  
@@ -420,18 +127,115 @@ public class DuplicatedCodeSnifferTest {
     }
 
     @Test
-    public void testDuplicateMethodWithScriptAndControlStatementsAndNestedControlStatements(){
+    public void testDuplicatedCodeWithFlatCodeMessy(){
         String code = """
-                def metodoA(){
-                    for i in range(3){
-                        if (a == b) {  
-                            print(1);  
-                        } else {  
-                            print(2);  
-                        } 
+                print(1);
+                print(2);
+
+                class Ejemplo(){
+                    def metodoA(){
+                        print(1);
+                        print(2);
+                        mensaje = "Hola";
+                        print(mensaje);
                     }
                 }
 
+                mensaje = "Hola";
+                print(mensaje);
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(1, report.getAromas().size());
+    }
+
+    @Test
+    public void testDuplicatedCodeWithImport(){
+        String code = """
+                import random;
+                a = random.randint(0, 10);
+
+                class Ejemplo(){
+                    def metodoA(){
+                        import random;
+                        a = random.randint(0, 10);
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(1, report.getAromas().size());
+    }
+
+    @Test
+    public void testNoDuplicatedCodedWithImport(){
+        String code = """
+                import random;
+                a = random.randint(0, 10);
+
+                class Ejemplo(){
+                    def metodoA(){
+                        a = random.randint(0, 10);
+                    }
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertFalse(report.stinks());
+    }
+
+    @Test
+    public void testMoreOfOneDuplicatedMethodInsideAndOutsideClass() {
+        String code = """
+                class Ejemplo() { 
+                    def metodoA(){
+                        print(1);
+                        print(2);
+                        print(3);
+                    }
+
+                    def metodoB(){
+                        print(1);
+                        print(2);
+                        print(3);
+                    }
+                }
+
+                def metodoC(){
+                    print(1);
+                    print(2);
+                    print(3);
+                }
+
+                def metodoD(){
+                    print(1);
+                    print(2);
+                    print(3);
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(3, report.getAromas().size());
+    }
+
+    @Test
+    public void testNoDuplicatedCodeFlatCodeWithNestedControlStatements(){
+        String code = """
+                class Ejemplo() { 
+                    def metodoA(number){
+                        for i in range(3){
+                            if (a == b) {  
+                                print(1);  
+                            } else {  
+                                print(2);  
+                            } 
+                        }
+                    }
+                }
+                    
                 for i in range(3){
                     if (a == b) {  
                         print(1);  
@@ -446,10 +250,8 @@ public class DuplicatedCodeSnifferTest {
         assertEquals(1, report.getAromas().size());
     }
 
-    
-
     @Test
-    public void test(){
+    public void testDuplicatedMethodWithAssings(){
         String code = """
                 class Ejemplo(){
                     def metodoA(){
@@ -462,7 +264,6 @@ public class DuplicatedCodeSnifferTest {
                     b = 1;
                     c = 2;
                 }
-
                 """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -471,7 +272,27 @@ public class DuplicatedCodeSnifferTest {
     }
 
     @Test
-    public void test2(){
+    public void testNoDuplicatedMethodWithAssings(){
+        String code = """
+                class Ejemplo(){
+                    def metodoA(){
+                        a = 0;
+                        b = 1;
+                        c = 2;
+                    }
+                    a = 0;
+                    b = 1;
+                    c = 2;
+                    d = 3;   
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertFalse(report.stinks());
+    }
+
+    @Test
+    public void testDuplicatedCodeWithAssingsOfOtherClass(){
         String code = """
                 class Ejemplo(){
                     def metodoA(){
@@ -480,10 +301,6 @@ public class DuplicatedCodeSnifferTest {
                         c = 2;
                     }
                 }
-
-                a = 0;
-                b = 1;
-                c = 2;
 
                 class Ejemplo2(){
                     a = 0;
@@ -494,40 +311,16 @@ public class DuplicatedCodeSnifferTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
         assertTrue(report.stinks());
-        assertEquals(3, report.getAromas().size());
+        assertEquals(1, report.getAromas().size());
     }
 
     @Test
-    public void test3(){
+    public void testDuplicatedAssings(){
         String code = """
                 class Ejemplo(){
-                    def metodoA(){
-                        a = 0;
-                        b = 1;
-                        c = 2;
-                    }
                     a = 0;
                     b = 1;
                     c = 2;
-                    a = 0;
-                    b = 1;
-                    c = 2;   
-                }
-                """;
-        AromaReport report = new AromaReport(code);
-        codeSniffer.sniff(code, report);
-        assertFalse(report.stinks());
-    }
-
-    @Test
-    public void test4(){
-        String code = """
-                class Ejemplo(){
-                    def metodoA(){
-                        a = 0;
-                        b = 1;
-                        c = 2;
-                    }
                 }
                 
                 class Ejemplo2(){
@@ -543,19 +336,17 @@ public class DuplicatedCodeSnifferTest {
     }
 
     @Test
-    public void testAssigns(){
+    public void testDuplicatedAssingsWithFlatCode(){
         String code = """
                 class Ejemplo(){
                     a = 0;
                     b = 1;
                     c = 2;
                 }
-                class Ejemplo2(){    
-                    a = 0;
-                    b = 1;
-                    c = 2;
-                }
 
+                a = 0;
+                b = 1;
+                c = 2;
                 """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -564,39 +355,71 @@ public class DuplicatedCodeSnifferTest {
     }
 
     @Test
-    public void testAssignsNoDuplicated(){
+    public void testNoDuplicatedAssingsWithFlatCode(){
         String code = """
                 class Ejemplo(){
-                    f = 2;
-                    d = 1;
-                    d = 0;
-                }
-                class Ejemplo2(){    
                     a = 0;
                     b = 1;
                     c = 2;
                 }
 
+                a = 0;
+                b = 1;
+                c = 2;
+                d = 3;
                 """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
         assertFalse(report.stinks());
-        assertEquals(1, report.getAromas().size());
     }
 
     @Test
-    public void testAssignsAndScriptDuplicated(){
+    public void testMultipleCases(){
         String code = """
                 class Ejemplo(){
+                    def metodoA(){
+                        a = 0;
+                        b = 1;
+                        c = 2;
+                    }
+
                     a = 0;
                     b = 1;
                     c = 2;
                 }
-                    
+
+                class Ejemplo2(){
                     a = 0;
                     b = 1;
                     c = 2;
+                }
 
+                def metodoB(){
+                    if (a == b) {  
+                        print(1);  
+                    } else {  
+                        print(2);  
+                    }
+                }
+
+                if (a == b) {  
+                    print(1);  
+                } else {  
+                    print(2);  
+                }
+                """;
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+        assertTrue(report.stinks());
+        assertEquals(3, report.getAromas().size());
+    }
+
+    @Test
+    public void testDuplicatedMethodsWithNoContent(){
+        String code = """
+                def a(){}
+
+                def b(){}
                 """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
@@ -605,22 +428,28 @@ public class DuplicatedCodeSnifferTest {
     }
 
     @Test
-    public void testAssignsAndScriptNoDuplicated(){
+    public void testClassEmpty(){
         String code = """
-                class Ejemplo(){
-                    a = 0;
-                    b = 1;
-                    c = 2;
-                }
-                    
-                    d = 3;
-                    e = 4;
-                    f = 5;
+                class Ejemplo(){}
 
+                class Ejemplo2(){}
                 """;
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
         assertFalse(report.stinks());
+    }
+
+    @Test
+    public void testSyntaxError(){
+        String code = """
+                SELECT columna1, columna2  
+                FROM tabla  
+                WHERE columna3 = 'valor'; 
+                """;
+        AromaReport report = new AromaReport(code);
+        assertThrows(IllegalArgumentException.class, () -> {
+            codeSniffer.sniff(code, report);
+        });
     }
 
 }
