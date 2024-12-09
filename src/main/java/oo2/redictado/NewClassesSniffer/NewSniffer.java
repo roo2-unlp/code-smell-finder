@@ -1,4 +1,4 @@
-package oo2.redictado.AlternativeClassesSniffer;
+package oo2.redictado.NewClassesSniffer;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -11,7 +11,7 @@ import oo2.redictado.CodeSniffer;
 import oo2.redictado.antlr4.BythonLexer;
 import oo2.redictado.antlr4.BythonParser;
 
-public class AlternativeClassesSniffer implements CodeSniffer {
+public class NewSniffer implements CodeSniffer {
 
     @Override
     public void sniff(String code, AromaReport report) {
@@ -31,7 +31,7 @@ public class AlternativeClassesSniffer implements CodeSniffer {
         }
 
         
-        AlternativeClassesVisitor visitor = new AlternativeClassesVisitor(report);
+        NewAlternativeClassesVisitor visitor = new NewAlternativeClassesVisitor(report);
         visitor.visit(tree);
 
         if (!report.stinks()) {
