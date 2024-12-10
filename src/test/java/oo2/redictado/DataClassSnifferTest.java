@@ -86,15 +86,22 @@ public class DataClassSnifferTest {
                     self.ciudad = ciudad;
                 }
             }
+
+            class Cliente{
+                 def __init__(self, nombre, direccion){
+                     self.nombre = nombre;
+                     self.direccion = direccion;
+                 }
+            }
             """;
         
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
         assertTrue(report.stinks()); // Verifica que el código "huele mal"
-        assertEquals(1, report.getAromas().size()); // Verifica que se haya detectado un mal olor
+        assertEquals(2, report.getAromas().size()); // Verifica que se haya detectado 2 mal olor
     }
-
+   
     @Test
     public void testMixedClassWithSomeLogic() {
         String code = """
@@ -132,7 +139,7 @@ public class DataClassSnifferTest {
         codeSniffer.sniff(code, report);
 
         assertFalse(report.stinks()); // Verifica que el código no "huele mal"
-        //assertEquals(0, report.getAromas().size()); // Verifica que no se haya detectado un mal olor
+        assertEquals(1, report.getAromas().size()); // Agrega un aroma si la clase no tiene mal olor
     }
 
     @Test
@@ -148,7 +155,21 @@ public class DataClassSnifferTest {
 
         // Verifica que no se haya detectado ningún mal olor
         assertFalse(report.stinks()); // La clase vacía no debe ser marcada como Data Class
-        //assertEquals(0, report.getAromas().size()); // No se debe agregar ningún aroma (ningún mal olor)
+        assertEquals(1, report.getAromas().size()); // Agrega un aroma si la clase no tiene mal olor
     }
+
+    @Test
+    public void testEmptyCode() {
+        // Código vacío
+        String code = "";
+
+        AromaReport report = new AromaReport(code);
+        codeSniffer.sniff(code, report);
+
+        // Verifica que no se haya detectado ningún mal olor
+        assertFalse(report.stinks()); // El código vacío no debe ser marcado como Data Class
+        assertEquals(1, report.getAromas().size()); //Agrega un aroma si la clase no tiene mal olor
+    }
+
     
 }
