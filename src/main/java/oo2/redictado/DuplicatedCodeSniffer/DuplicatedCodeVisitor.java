@@ -3,6 +3,8 @@ package oo2.redictado.DuplicatedCodeSniffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.misc.NotNull;
+
 import oo2.redictado.Aroma;
 import oo2.redictado.AromaReport;
 import oo2.redictado.antlr4.BythonParser;
@@ -36,29 +38,27 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
         this.callerName = callerName;
     }
 
-    /**
-     * Visita el nodo "block" del árbol de sintaxis.
-     * Comprueba si el bloque es duplicado comparándolo con bloques, codigo plano y asignaciones previamente almacenadas.
-     * Si se encuentra código duplicado, se registra un aroma en el reporte.
-     *
-     * @param ctx el contexto del bloque a analizar.
-     * @return el resultado de {@code visitChildren(ctx)}, que continúa el recorrido del árbol de sintaxis.
-     */
     @Override
-    public Void visitBlock(BythonParser.BlockContext ctx) {
-        if ((ctx.depth() < 4) || (ctx.getParent() instanceof MethodDeclContext)) {
-            boolean isDupled = bloques.stream().anyMatch(bloque -> ctx.getText().equals(bloque.getText()));
-
-            if (!isDupled) {
-                bloques.add(ctx);
-            }
-
-            if (isDupled || ctx.getText().equals(codigoPlano.toString())) {
-                this.report.addAroma(new Aroma("duplicated code", "El código contiene duplicados.", true));
-            }
-        }
-
+    public Void visitMethodDecl(MethodDeclContext ctx) {
+        comparar(ctx.block());
         return visitChildren(ctx);
+    }
+
+    @Override
+    public Void visitFunctionDecl(BythonParser.FunctionDeclContext ctx){
+        comparar(ctx.block());
+        return visitChildren(ctx);
+    }
+
+    private void comparar(BythonParser.BlockContext ctx) {
+        boolean isDupled = bloques.stream().anyMatch(bloque -> ctx.getText().equals(bloque.getText()));
+        if (!isDupled) {
+            bloques.add(ctx);
+        }
+    
+        if (isDupled || ctx.getText().equals(codigoPlano.toString())) {
+            this.report.addAroma(new Aroma("duplicated code", "El código contiene duplicados.", true));
+        }
     }
 
     /**
@@ -80,7 +80,7 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
                 this.report.addAroma(new Aroma("duplicated code", "El código contiene duplicados.", true));
             }
         }
-
+        
         return result;
     }
 
@@ -110,6 +110,7 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
         return visitChildren(ctx);
     }
 
+
     /**
      * Almacena las asignaciones de una clase en un StringBuilder.
      *
@@ -120,11 +121,12 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
         StringBuilder aux = new StringBuilder();
         aux.append("{");
         for (ClassMemberContext children : ctx.classMember()) {
-            if (!(children.getChild(0) instanceof MethodDeclContext)) {
+            if (children.simpleAssignment() != null) {
                 aux.append(children.getText());
             }
         }
         aux.append("}");
+
         return !aux.toString().equals("{}") ? aux : null;
     }
 }
