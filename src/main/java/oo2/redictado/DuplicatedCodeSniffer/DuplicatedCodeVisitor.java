@@ -22,8 +22,8 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
 
     private AromaReport report;
     private StringBuilder codigoPlano = new StringBuilder();
-    private List<StringBuilder> asignaciones = new ArrayList<>();
-    private List<BythonParser.BlockContext> bloques = new ArrayList<>();
+    private List<String> asignaciones = new ArrayList<>();
+    private List<String> bloques = new ArrayList<>();
     private String callerName;
 
     /**
@@ -40,23 +40,23 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
 
     @Override
     public Void visitMethodDecl(MethodDeclContext ctx) {
-        comparar(ctx.block());
+        comparar(ctx.block().getText(),bloques);
         return visitChildren(ctx);
     }
 
     @Override
     public Void visitFunctionDecl(BythonParser.FunctionDeclContext ctx){
-        comparar(ctx.block());
+        comparar(ctx.block().getText(), this.bloques);
         return visitChildren(ctx);
     }
 
-    private void comparar(BythonParser.BlockContext ctx) {
-        boolean isDupled = bloques.stream().anyMatch(bloque -> ctx.getText().equals(bloque.getText()));
-        if (!isDupled) {
-            bloques.add(ctx);
+    private void comparar(String comparado, List<String> comparaciones) {
+        boolean isDupled = comparaciones.stream().anyMatch(bloque -> comparado.equals(bloque.toString()));
+        if (!(isDupled)&&!(comparado.equals("{}"))) {
+            comparaciones.add(comparado);
         }
     
-        if (isDupled || ctx.getText().equals(codigoPlano.toString())) {
+        if (isDupled || comparado.equals(codigoPlano.toString())) {
             this.report.addAroma(new Aroma("duplicated code", "El código contiene duplicados.", true));
         }
     }
@@ -74,8 +74,8 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
         codigoPlano = codigoPlano.toString().equals("{}") ? new StringBuilder() : codigoPlano;
         Void result = visitChildren(ctx);
 
-        for (StringBuilder asignacion : asignaciones) {
-            boolean match = bloques.stream().anyMatch(bloque -> bloque.getText().equals(asignacion.toString()));
+        for (String asignacion : asignaciones) {
+            boolean match = bloques.stream().anyMatch(bloque -> bloque.equals(asignacion));
             if (match) {
                 this.report.addAroma(new Aroma("duplicated code", "El código contiene duplicados.", true));
             }
@@ -96,15 +96,7 @@ public class DuplicatedCodeVisitor extends BythonParserBaseVisitor<Void> {
         StringBuilder aux = generarAsignacion(ctx);
 
         if (aux != null) {
-            boolean isDupled = asignaciones.stream().anyMatch(asignacion -> aux.toString().equals(asignacion.toString()));
-
-            if (!isDupled) {
-                asignaciones.add(aux);
-            }
-
-            if (isDupled || aux.toString().equals(codigoPlano.toString())) {
-                this.report.addAroma(new Aroma("duplicated code", "El código contiene duplicados.", true));
-            }
+            comparar(aux.toString(), asignaciones);
         }
 
         return visitChildren(ctx);
