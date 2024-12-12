@@ -40,10 +40,5 @@ public class MethodLogicVisitor extends BythonParserBaseVisitor<Void> {
         return null;
     }
 
-    @Override
-    protected Void aggregateResult(Void aggregate, Void nextResult) {
-        // No necesitamos combinar resultados, pero podemos interrumpir
-        return hasLogic ? null : super.aggregateResult(aggregate, nextResult);
-    }
 }
 
