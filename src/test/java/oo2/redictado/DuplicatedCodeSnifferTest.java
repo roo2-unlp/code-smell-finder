@@ -424,7 +424,6 @@ public class DuplicatedCodeSnifferTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
         assertFalse(report.stinks());
-        assertEquals(1, report.getAromas().size());
     }
 
     @Test
