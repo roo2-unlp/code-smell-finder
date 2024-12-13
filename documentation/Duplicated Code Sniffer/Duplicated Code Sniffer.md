@@ -72,7 +72,7 @@ La clase `DuplicatedCodeSniffer` utiliza un objeto que implementa el patrón **V
 
 **Justificación:** El cuerpo dentro del método `metodoA()` es único y no tiene ninguna secuencia duplicada con otro cuerpo o bloque de código plano, por lo que el sniffer no detecta código duplicado.  
 
-```java
+```python
 class Ejemplo() {  
     def metodoA() {  
         print(1);  
@@ -88,7 +88,7 @@ class Ejemplo() {
 
 **Justificación:** El cuerpo de `metodoA` y `metodoB` contiene líneas de código distintas. El sniffer no detecta código duplicado.
 
-```java
+```python
 class Ejemplo() {  
     def metodoA() {  
         x = 1;  
@@ -111,7 +111,7 @@ class Ejemplo() {
 
 **Justificación:** El cuerpo de `metodoA` es idéntico al de `metodoB`. Ambos comparten exactamente las mismas tres líneas de código en el mismo orden, por lo que el sniffer detecta código duplicado.
 
-```java
+```python
 class Ejemplo() {  
     def metodoA() {  
         print(1);  
@@ -133,7 +133,7 @@ class Ejemplo() {
 
 **Justificación:** Ambos métodos tienen cuerpos idénticos, incluyendo las estructuras de control, por lo que el sniffer detecta código duplicado.
 
-```java
+```python
 class Ejemplo() {  
     def metodoA(a, b) {  
         if (a == b) {  
@@ -159,7 +159,7 @@ class Ejemplo() {
 
 **Justificación:** El cuerpo de `metodoA` es idéntico al bloque de código plano, por lo que el sniffer detecta código duplicado.
 
-```java
+```python
 def metodoA() {  
     if (a == b) {  
         print(1);  
@@ -182,7 +182,7 @@ if (a == b) {
 **Justificación:** El cuerpo del `metodoA` es idéntico al bloque de código plano.
 Que las líneas de código plano no sean consecutivas no altera el análisis, ya que el sniffer las concatena en un bloque de líneas consecutivas.  
 
-```java
+```python
 print(1);  
 print(2);  
 
@@ -205,7 +205,7 @@ print(mensaje);
 
 **Justificación:** El cuerpo del `metodoA` es idéntico al bloque de código plano.  
 
-```java
+```python
 import random;  
 a = random.randint(0, 10);  
 
@@ -223,7 +223,7 @@ class Ejemplo() {
 
 **Justificación:** El cuerpo del `metodoA` es diferente al bloque de código plano.  
 
-```java
+```python
 import random;  
 a = random.randint(0, 10);  
 
@@ -240,7 +240,7 @@ class Ejemplo() {
 
 **Justificación:** Los cuerpos de los métodos `metodoA`, `metodoB` y los cuerpos de las funciones `funcionC` y `funcionD` son idénticos, presentan las mismas tres líneas de código en el mismo orden. 
 
-```java
+```python
 class Ejemplo() {  
     def metodoA() {  
         print(1);  
@@ -274,7 +274,7 @@ def funcionD() {
 
 **Justificación:** El cuerpo del `metodoA` es identico al bloque de código plano y presenta estructura de control anidadas.   
 
-```java
+```python
 class Ejemplo() {  
     def metodoA(number) {  
         for i in range(3) {  
@@ -302,7 +302,7 @@ for i in range(3) {
 
 **Justificación:** Las asignaciones de la clase `Ejemplo` son idénticas al cuerpo del método `metodoA`.
 
-```java
+```python
 class Ejemplo() {  
     def metodoA() {  
         a = 0;  
@@ -321,7 +321,7 @@ class Ejemplo() {
 
 **Justificación:** Las asignaciones de la clase `Ejemplo` son diferentes al cuerpo del método `metodoA`.
 
-```java
+```python
 class Ejemplo(){
     def metodoA(){
         a = 0;
@@ -340,7 +340,7 @@ class Ejemplo(){
 
 **Justificación:** Las asignaciones de la clase `Ejemplo2` son idénticas al cuerpo del método `metodoA`.
 
-```java
+```python
 class Ejemplo(){
     def metodoA(){
         a = 0;
@@ -361,7 +361,7 @@ class Ejemplo2(){
 
 **Justificación:** Las asignaciones de la clase `Ejemplo` son idénticas a las de la clase `Ejemplo2`.
 
-```java
+```python
 class Ejemplo(){
     a = 0;
     b = 1;
@@ -380,7 +380,7 @@ class Ejemplo2(){
 
 **Justificación:** Las asignaciones de la clase `Ejemplo` son idénticas al bloque de código plano.
 
-```java
+```python
 class Ejemplo(){
     a = 0;
     b = 1;
@@ -398,7 +398,7 @@ c = 2;
 
 **Justificación:** Las asignaciones de la clase `Ejemplo` son diferentes al bloque de código plano.
 
-```java
+```python
 class Ejemplo(){
     a = 0;
     b = 1;
@@ -418,7 +418,7 @@ d = 3;
 Por otro lado, el cuerpo de la función `funcionB` es idéntico al bloque de código plano y poseen estructuras de control duplicadas. 
 
 
-```java
+```python
 class Ejemplo(){
     def metodoA(){
         a = 0;
@@ -457,7 +457,7 @@ if (a == b) {
 
 **Justificación:** Ambas funciones no presentan cuerpo, el sniffer compara bloques de código, por lo que métodos o funciones sin cuerpo no serán identificados como duplicados.
 
-```java
+```python
 def a(){}
 
 def b(){}
@@ -468,7 +468,7 @@ def b(){}
 
 **Justificación:** Ambas clases no presentan asignaciones, el sniffer no detecta código duplicado
 
-```java
+```python
 class Ejemplo(){}
 
 class Ejemplo2(){}
