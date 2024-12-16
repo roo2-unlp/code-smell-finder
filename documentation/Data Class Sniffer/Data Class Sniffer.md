@@ -39,6 +39,23 @@ DataClassSnifferVisitor: Visitante principal que recorre las clases y sus métod
 
 **visitIfStatement, visitWhileStatement, visitForStatement, visitReturnStatement, visitExpression**: Detectan las estructuras de control o expresiones que indican la presencia de lógica en el código.
 
+🎯 **Alcance y Enfoque de las Pruebas**
+
+Para testear y detectar el Bad Smell: Data Class, hemos adoptado las siguientes consideraciones:
+
+### Criterios de detección:
+
+- Solo verificaremos si una clase tiene exclusivamente atributos o un constructor, ya que este es el criterio que hemos definido para clasificar una clase como Data Class.
+- Si una clase contiene lógica adicional (métodos con condicionales, bucles o retornos), no será considerada una Data Class.
+
+### Limitaciones:
+
+- El problema de los getters y setters no puede ser completamente validado en nuestras pruebas porque es una cuestión semántica más que sintáctica. Aunque en muchas ocasiones los métodos llamados get o set son indicadores de un diseño pobre en las Data Classes, no podemos garantizar que estos métodos no contengan lógica adicional solo analizando sus nombres o estructuras básicas.
+- Por esta razón, nuestra detección de Data Classes se enfoca exclusivamente en identificar clases que:
+
+- Contienen únicamente atributos, o
+- Tienen un constructor sin lógica adicional.
+
 ### 🧪 Casos de Prueba para Detección de "Data Class"
 
 #### Caso 1: Clase con solo atributos
