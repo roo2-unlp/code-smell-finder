@@ -15,11 +15,6 @@ public class AlternativeClassesTest {
         codeSniffer = new AlternativeClassesSniffer();
     }
 
-    // true = detecta mal olor. Cumple con el mal olor. Diferente interfaz 
-    // false = NO TIENE EL MAL OLOR 
-
-    // Caso 1: Dos clases con el mismo polimorficas,con mismos métodos y parametros identicos.
-    // este caso debe retornar false, es decir que al ser identicios no presetna el mal olor.
     @Test
     public void testEsPolimorfico() {
         String code = """
@@ -43,12 +38,9 @@ public class AlternativeClassesTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertFalse(report.stinks()); // No debe detectar mal olor
+        assertFalse(report.stinks());
     }
 
-    // Caso 2: Dos clases con métodos similares pero una de las clases tiene un 
-    // metodo adicional, por lo que es un mal olor
-    // por lo que este test devuelve true
     @Test
     public void testClaseConMasMetodos() {
         String code = """
@@ -69,12 +61,9 @@ public class AlternativeClassesTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertTrue(report.stinks()); // Debe detectar mal olor
+        assertTrue(report.stinks());
     }
 
-    // Caso 3: Clases con misma cantidad de métodos, parametros pero con distinto nombres
-    //en los métodos
-    // devuelve true porque se llaman distinto
     @Test
     public void testClaseMetodosDistintosPeroMismosParametros() {
         String code = """
@@ -92,11 +81,9 @@ public class AlternativeClassesTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertTrue(report.stinks()); // Debe detectar mal olor
+        assertTrue(report.stinks()); 
     }
 
-    // Caso 4: Método con mismos nombres 
-    //contenido diferente (no hay mal olor)
     @Test
     public void testMetodosYParametrosIgualesConContenidoDiferentes() {
         String code = """
@@ -114,11 +101,10 @@ public class AlternativeClassesTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertFalse(report.stinks()); // No debe detectar mal olor
+        assertFalse(report.stinks());
     }
 
-    // Caso 5:La segunda clase tiene mas métodos que la primera
-    //retorna true
+
     @Test
     public void testMetodosConNombresIgualesPeroParametrosDiferentes() {
         String code = """
@@ -138,14 +124,12 @@ public class AlternativeClassesTest {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertTrue(report.stinks()); // Debe detectar mal olor
+        assertTrue(report.stinks()); 
     }
 
 
 
-     // Caso 7: Métodos con nombres diferentes, parámetros diferentes
-     // --> es necesarios tener este test? 
-     // ya tenemos uno para parametros y otro para metodos distintos 
+     
      @Test
      public void testMetodosConNombresDiferentesParametrosDiferentes() {
          String code = """
@@ -163,7 +147,7 @@ public class AlternativeClassesTest {
          AromaReport report = new AromaReport(code);
          codeSniffer.sniff(code, report);
 
-         assertTrue(report.stinks()); // Debe detectar mal olor
+         assertTrue(report.stinks()); 
     }
 
 @Test
@@ -188,7 +172,7 @@ public void testMasDeDosClasesPolimorficas() {
     AromaReport report = new AromaReport(code);
     codeSniffer.sniff(code, report);
 
-    assertFalse(report.stinks()); // No debe hacer nada si hay más de dos clases
+    assertFalse(report.stinks()); 
 }
 
 @Test
@@ -214,10 +198,10 @@ public void testMasDeDosClasesPolimorficas() {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertFalse(report.stinks()); // debe detectar mal olor
+        assertFalse(report.stinks()); 
     }
 
-    // SUPONEMOS QUE EL TIPO DE DATO QUE RECIBE COMO PARAMETRO ES INDIFERENTE PARA LA IMPLEMENTACION 
+     
 @Test
 public void testParametrosInvertidos() {
     String code = """
@@ -242,7 +226,7 @@ public void testParametrosInvertidos() {
     AromaReport report = new AromaReport(code);
     codeSniffer.sniff(code, report);
 
-    assertTrue(report.stinks()); // debe detectar mal olor
+    assertTrue(report.stinks()); 
 }
 
 @Test
@@ -253,7 +237,7 @@ public void testParametrosInvertidos() {
         AromaReport report = new AromaReport(code);
         codeSniffer.sniff(code, report);
 
-        assertFalse(report.stinks()); // No debe detectar mal olor
+        assertFalse(report.stinks()); 
     }
 
 }
