@@ -172,15 +172,8 @@ class VTV{
 ### Ejemplo 8
 No hay *feature envy* porque el código no está dentro de una clase
 ```python
-class VTV{
-	def __init__(self, auto){
-		self.auto = auto;
-		self.precioBase = 20000;
-	}
-	
-	def calcularPrecio(){
-		return self.auto.precioTotal(VTV);
-	}
-}
+    auto.motor.temperatura;
+    auto.radio.marca == "Lenovo";
+    auto.marca.nombre == "Honda";
 ```
 
