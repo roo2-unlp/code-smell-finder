@@ -49,7 +49,6 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
             paramListContext.ID().forEach(param -> {
                 String paramName = param.getText();
                 attributeAccessCount.put(paramName, 0);
-                System.out.println("Parámetro encontrado: " + paramName);
             });
         }
         return super.visitMethodDecl(ctx);
@@ -64,7 +63,6 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
         if (ctx.simpleAssignment() != null) {
             String varName = ctx.simpleAssignment().ID().getText();
             instanceVariables.add(varName);
-            System.out.println("Variable de instancia registrada: " + varName);
         }
         return visitChildren(ctx);
     }
@@ -83,7 +81,6 @@ public class FeatureEnvyVisitor extends BythonParserBaseVisitor<Void> {
             }
         });
 
-        System.out.println("Acceso completo construido: " + fullAccess);
         contarAccesoProperty(fullAccess.toString());
         return null;
     }
