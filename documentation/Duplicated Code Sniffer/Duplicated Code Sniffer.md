@@ -26,11 +26,11 @@ El análisis se centra en detectar repeticiones exactas dentro de los métodos o
    Un bloque de código plano son las líneas que no pertenecen al cuerpo de un método que son agrupadas según su origen.
 4. **Forma de comparación:**
    La comparación de los bloques se realiza carácter por carácter.
-3. **Exclusión de Firmas:**  
+5. **Exclusión de Firmas:**  
    Las diferencias en nombres, firmas o parámetros de métodos no afectan la detección si los cuerpos son idénticos.  
-4. **Soporte Exclusivo de Bython:**  
+6. **Soporte Exclusivo de Bython:**  
    El sniffer solo analizará código escrito en Bython; otros lenguajes serán ignorados.  
-5. **Errores y Alertas:**  
+7. **Errores y Alertas:**  
    Todos los casos de código duplicado serán alertados tras analizar el archivo completo. Si el archivo no corresponde a Bython, el análisis finalizará al detectar la primera línea inválida.
 
 ---
